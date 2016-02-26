@@ -5,6 +5,12 @@ console.log(vol_input);
 
 var music = document.getElementById("myAudio"); 
 
+// On input change, number can't go below a range
+function handleChange(input) {
+	if (input.value < 0) input.value = 0;
+    if (input.value > 10) input.value = 10;
+}
+
 //Make volume = to what is in input field
 music.volume = vol_input;
 console.log (music.volume);
