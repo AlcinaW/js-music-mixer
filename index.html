@@ -9,8 +9,8 @@
 
 	</div>
 	<!-- Testing --> 
-	<!-- <audio id="myAudio" controls autoplay loop> -->
-	<audio id="myAudio" controls>
+	<audio id="myAudio" controls autoplay loop> 
+	<!--  <audio id="myAudio" controls> -->
   	<!-- Saber sounds via http://theforce.net/fanfilms/postproduction/soundfx/saberfx_fergo.asp -->
   	<!-- <source src="Saberftn.ogg" type="audio/ogg"> -->
   	<!-- how to loop this, change to better audio later -->
@@ -20,13 +20,13 @@
 
 	<br>
 
-	<!-- Loop audio because of the length -->
+	<!-- Loop audio because of the length 
 	<button onclick="startLoop()" type="button">Loop audio</button>
-	<button onclick="stopLoop()" type="button">Stop Loop</button>
+	<button onclick="stopLoop()" type="button">Stop Loop</button> -->
 	<!-- supposed to return fraction of what current volume is out of 1.0 -->
-	<div id="audioVolumeNum"></div>
+	<div id="audio-vol-display"></div>
 
-	<input></input>
+	<input id="audio-vol-input" value="1"></input>
 
 	<script type="text/javascript" src="app.js"></script>
 </body>
