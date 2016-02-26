@@ -25,8 +25,12 @@
 	<button onclick="stopLoop()" type="button">Stop Loop</button> -->
 	<!-- supposed to return fraction of what current volume is out of 1.0 -->
 	<div id="audio-vol-display"></div>
-
+	<label for="twenty">Up to 20</label>
 	<input type="number" id="audio-vol-input" value="1" min="1" max="20" />
+
+	<br>
+	<label for="slider-range">Between 0 and 1</label>
+	<input type="range" name="points" min="0" max="1" step="0.01" onchange="console.log(this.value)" />
 
 
 	<script type="text/javascript" src="app.js"></script>
