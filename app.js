@@ -1,8 +1,13 @@
-window.onload = document.getElementById('audio-vol-input').innerHTML;
+var vol_input = document.getElementById('audio-vol-input').value;
+
+console.log(vol_input);
+
 
 var music = document.getElementById("myAudio"); 
 
-music.volume = .5;
+//Make volume = to what is in input field
+music.volume = vol_input;
+console.log (music.volume);
 
 //function startLoop() {
 // 	music.loop = true; 
