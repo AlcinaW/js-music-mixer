@@ -3,8 +3,7 @@ var audioVolume = document.getElementById("audioVolume");
 
 // binds audio volume to slider input
 function slideVolume() {
-    var audioClip = document.getElementById("audioClip");
-    audioClip.volume = document.getElementById("audioVolume").value;
+    audioClip.volume = audioVolume.value;
 }
 
 
