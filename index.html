@@ -4,26 +4,29 @@
 	<title>JS Music Mixer Project</title>
 </head>
 <body>
-	<h1></h1>
-	<div class="audio control">
+	<h1>Are you ready? 3-2-1</h1>
+	
+	<div class "music-mixer">
+		<!-- AUDIO CLIP -->
+		<audio id="audioClip" controls autoplay loop> 
+	  	<!-- Saber sounds via http://theforce.net/fanfilms/postproduction/soundfx/saberfx_fergo.asp -->
+	  	<!-- <source src="Saberftn.ogg" type="audio/ogg"> -->
+	  		<source src="Saberftn.mp3" type="audio/mpeg">
+				Your browser does not support the audio element.
+		</audio>
 
+		<br>
+		<!-- Write in seperate pause button -->
+		<!-- hide original audio item --> 
+
+		<!-- <div id="audio-vol-display"></div>-->
+
+		<!-- SLIDER START -->
+		<label for="slider-range">Between 0 and 1</label>
+		<input id="audioVolume" type="range" name="points" min="0" max="1" step="0.01" onchange="console.log(this.value);slideVolume()" />
 	</div>
-	<!-- Testing --> 
-	<audio id="audioClip" controls autoplay loop> 
-  	<!-- Saber sounds via http://theforce.net/fanfilms/postproduction/soundfx/saberfx_fergo.asp -->
-  	<!-- <source src="Saberftn.ogg" type="audio/ogg"> -->
-  		<source src="Saberftn.mp3" type="audio/mpeg">
-			Your browser does not support the audio element.
-	</audio>
-
-	<br>
-
-	<div id="audio-vol-display"></div>
-
-	<label for="slider-range">Between 0 and 1</label>
-	<input id="audioVolume" type="range" name="points" min="0" max="1" step="0.01" onchange="console.log(this.value);slideVolume()" />
-
 
 	<script type="text/javascript" src="app.js"></script>
+
 </body>
 </html>

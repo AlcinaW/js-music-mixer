@@ -1,15 +1,10 @@
 var audioClip = document.getElementById("audioClip"); 
-var audioVolume = document.getElementbyId("audioVolume");
+var audioVolume = document.getElementById("audioVolume");
 
-//Grabs slider value
-var vol_input = document.getElementById('audio-vol-input');
-
-console.log(vol_input);
-
+// binds audio volume to slider input
 function slideVolume() {
     var audioClip = document.getElementById("audioClip");
     audioClip.volume = document.getElementById("audioVolume").value;
-
 }
 
 
@@ -19,7 +14,3 @@ function slideVolume() {
 // 	if (input.value < 0) input.value = 0;
 //     if (input.value > 10) input.value = 10;
 // }
-
-//Make volume == to what is in input field
-music.volume = vol_input;
-console.log (music.volume);
