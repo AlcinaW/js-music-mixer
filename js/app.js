@@ -7,7 +7,7 @@ function slideVolume() {
     audioClip.volume = audioVolume.value;
 }
 
-// lets you play or pause the audio
+// button that lets you play or pause the audio
 function playPause() {
     if (audioClip.paused) {
     	audioClip.play();   
