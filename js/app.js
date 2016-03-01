@@ -1,6 +1,6 @@
 var audioClip = document.getElementById("audioClip"); 
 var audioVolume = document.getElementById("audioVolume");
-var playButton = document.getElementById("play-pause-button");
+var playButton = document.getElementById("playPauseButton");
 
 // binds audio volume to slider input
 function slideVolume() {
