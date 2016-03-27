@@ -4,22 +4,29 @@
 	<title>JS Music Mixer Project</title>
 </head>
 <body>
-	<h1>Are you ready? 3-2-1</h1>
+	<h1>amuse</h1>
 	
 	<div class "music-mixer">
 		<!-- AUDIO CLIP -->
 		<audio id="audioClip" controls autoplay loop> 
 
 		<!-- The Voyage by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/by/4.0/) Artist: http://audionautix.com/ VIA Youtube Audio Library -->
-	  	<!-- <source src="Saberftn.ogg" type="audio/ogg"> -->
-	  	<!-- hide original audio item? --> 
+
 	  		<source src="media/The_Voyage.mp3" type="audio/mpeg">
 				Your browser does not support the audio element.
 		</audio>
 
 		<br>
+
+		<audio id="audioClip" controls autoplay loop> 
+
+	  		<source src="media/Fly_Inverted_Past_a_Jenny.mp3" type="audio/mpeg">
+				Your browser does not support the audio element.
+		</audio>
+
+
 		<!-- Write in seperate pause button -->
-		<input onclick="swapText();playPause()" type="button" value="Pause" id="playPauseButton"></input> 
+		<!--<input onclick="swapText();playPause()" type="button" value="Pause" id="playPauseButton"></input> -->
 
 		<!-- SLIDER START -->
 		<label for="slider-range">Between 0 and 1</label>
