@@ -1,5 +1,10 @@
-//Note: run with python -m SimpleHTTPServer
+//Note: run with python -m SimpleHTTPServer to test
+//If use Node server, would probably need Gulp to auto reload the server every time something is saved
+//how to ignore Gulp package when sending items to Github? 
 //defaults to http://localhost:8000/
+
+//Would it be better to npm the packages for ToneJS in and configure the package.json, 
+// or just CDN, or leave files as is
 
 
 //loading file with XMLHttpRequest
