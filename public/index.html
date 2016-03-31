@@ -4,49 +4,23 @@
 	<title>JS Music Mixer Project</title>
 </head>
 <body>
-	<!-- <h1>amuse</h1>
-	
-	<div class "music-mixer">
-		<audio id="audioClip" controls autoplay loop> -->
+	<h1>Welcome to the Web Audio API</h1>
+		<script>
+		    // Create the audio context
+		    var context = new AudioContext(),
+    			oscillator = context.createOscillator();
+ 
+			// Connect the oscillator to speakers
+			oscillator.connect(context.destination);
 
-		<!-- The Voyage by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/by/4.0/) Artist: http://audionautix.com/ VIA Youtube Audio Library -->
+			// Start the oscillator now
+			oscillator.start(context.currentTime);
 
-	  		<!-- <source src="media/The_Voyage.mp3" type="audio/mpeg">
-				Your browser does not support the audio element.
-		</audio>
+			// Stop the oscillator 3 seconds from now
+			oscillator.stop(context.currentTime + 3);
 
-		<br>
-
-		<audio id="audioClip" controls autoplay loop> 
-
-	  		<source src="media/Fly_Inverted_Past_a_Jenny.mp3" type="audio/mpeg">
-				Your browser does not support the audio element.
-		</audio>
-
-		<label for="slider-range">Between 0 and 1</label>
-		<input id="audioVolume" type="range" name="points" min="0" max="1" step="0.01" onmousemove="console.log(this.value);slideVolume()" value="1"></input> 
-	</div>-->
-
-	<script type="text/javascript" src="js/pixi.js"></script>
-	<script>
-
-	//test
-	console.log(PIXI);
-
-	//Create the renderer
-	var renderer = PIXI.autoDetectRenderer(256, 256);
-
-	//Add the canvas to the HTML document
-	document.body.appendChild(renderer.view);
-
-	//Create a container object called the `stage`
-	var stage = new PIXI.Container();
-
-	//Tell the `renderer` to `render` the `stage`
-	renderer.render(stage);
-
-	</script>
-	<!-- <script type="text/javascript" src="js/app.js"></script>-->
-
+		    // If you're using Safari, you'll need to use this line instead
+		    var audioContext = new webkitAudioContext();
+		</script>
 </body>
 </html>
