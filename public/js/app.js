@@ -1,5 +1,35 @@
 //Note: run with python -m SimpleHTTPServer
 //defaults to http://localhost:8000/
+
+
+//loading file with XMLHttpRequest
+var request = new XMLHttpRequest();
+ 
+request.open('GET', '../media/Fly_Inverted_Past_a_Jenny.mp3', true);
+request.responseType = 'arraybuffer';
+ 
+request.onload = function () {
+    var undecodedAudio = request.response;
+ 
+    context.decodeAudioData(undecodedAudio, function (buffer) {
+        // Create the AudioBufferSourceNode
+        var sourceBuffer = context.createBufferSource();
+ 
+        // Tell the AudioBufferSourceNode to use this AudioBuffer
+        sourceBuffer.buffer = buffer;
+        //connect source node to speakers
+        sourceBuffer.connect(context.destination);
+        //when? now
+        sourceBuffer.start(context.currentTime);
+    });
+};
+ 
+request.send();
+
+
+
+
+//TEST generate sound in browser using web audio API for 3 seconds
 // Create the audio context
 var context = new AudioContext(),
     oscillator = context.createOscillator();
