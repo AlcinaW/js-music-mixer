@@ -8,6 +8,8 @@
 
 
 //loading file with XMLHttpRequest
+//to-do: what to do about more than one piece
+//to-do: re-add sliders
 var request = new XMLHttpRequest();
  
 request.open('GET', '../media/Fly_Inverted_Past_a_Jenny.mp3', true);
@@ -31,7 +33,8 @@ request.onload = function () {
  
 request.send();
 
-
+//toneJS uses uses loose callbacks for sound
+//JSON-like format for sound control
 
 
 //TEST generate sound in browser using web audio API for 3 seconds
@@ -48,7 +51,7 @@ oscillator.start(context.currentTime);
 // Stop the oscillator 3 seconds from now
 oscillator.stop(context.currentTime + 3);
 
-// If you're using Safari, you'll need to use this line instead
+// If Safari, will need this line
 var audioContext = new webkitAudioContext();
 
 
