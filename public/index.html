@@ -4,23 +4,9 @@
 	<title>JS Music Mixer Project</title>
 </head>
 <body>
-	<h1>Welcome to the Web Audio API</h1>
-		<script>
-		    // Create the audio context
-		    var context = new AudioContext(),
-    			oscillator = context.createOscillator();
- 
-			// Connect the oscillator to speakers
-			oscillator.connect(context.destination);
+	<h1>Amuse</h1>
 
-			// Start the oscillator now
-			oscillator.start(context.currentTime);
 
-			// Stop the oscillator 3 seconds from now
-			oscillator.stop(context.currentTime + 3);
-
-		    // If you're using Safari, you'll need to use this line instead
-		    var audioContext = new webkitAudioContext();
-		</script>
+		<script src="js/app.js"></script>
 </body>
 </html>
