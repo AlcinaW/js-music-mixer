@@ -1,55 +1,54 @@
 //Note: run with python -m SimpleHTTPServer to test
-//If use Node server, would probably need Gulp to auto reload the server every time something is saved
+
+//Would it be better to npm the packages for ToneJS in and configure the package.json, 
+// or just CDN, or leave files as is
 
 
-//scene, then camera, then renderer
-
- //Declare three.js variables
-var camera, scene, renderer, cube;
+//loading file with XMLHttpRequest
+//to-do: what to do about more than one piece
+//to-do: re-add sliders
+var request = new XMLHttpRequest();
  
-//assign three.js objects to each variable
-function init(){
-    //camera
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-     
-    //scene
-    scene = new THREE.Scene();
-     
-    //renderer
-    renderer = new THREE.WebGLRenderer();
-    //set the size of the renderer
-    renderer.setSize( window.innerWidth, window.innerHeight );
-     
-    //add the renderer to the html document body
-    document.body.appendChild( renderer.domElement );
-}
+request.open('GET', '../media/Fly_Inverted_Past_a_Jenny.mp3', true);
+request.responseType = 'arraybuffer';
+ 
+request.onload = function () {
+    var undecodedAudio = request.response;
+ 
+    context.decodeAudioData(undecodedAudio, function (buffer) {
+        // Create the AudioBufferSourceNode
+        var sourceBuffer = context.createBufferSource();
+ 
+        // Tell the AudioBufferSourceNode to use this AudioBuffer
+        sourceBuffer.buffer = buffer;
+        //connect source node to speakers
+        sourceBuffer.connect(context.destination);
+        //when? now
+        sourceBuffer.start(context.currentTime);
+    });
+};
+ 
+request.send();
 
-function addCube(){
-    //create box geometry object
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    //create material with colour
-    var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-    //combine geometry with material to create the cube
-    cube = new THREE.Mesh( geometry, material );
-    //add the cube to the scene
-    scene.add( cube );
+//toneJS uses uses loose callbacks for sound
+//JSON-like format for sound control
 
-    //set the camera position
-    camera.position.z = 5;
-}
 
-function render() {
-    //get the frame
-    requestAnimationFrame( render );
+//TEST generate sound in browser using web audio API for 3 seconds
+// Create the audio context
+var context = new AudioContext(),
+    oscillator = context.createOscillator();
 
-    //animate the cube
-    cube.rotation.x += 0.1;
-    cube.rotation.y += 0.1;
+// Connect the oscillator to speakers
+oscillator.connect(context.destination);
 
-    //render the scene
-    renderer.render( scene, camera );
-}
+// Start the oscillator now
+oscillator.start(context.currentTime);
 
-init();
-addCube();
-render();
+// Stop the oscillator 3 seconds from now
+oscillator.stop(context.currentTime + 3);
+
+// If Safari, will need this line
+var audioContext = new webkitAudioContext();
+
+
