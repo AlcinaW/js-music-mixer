@@ -11,7 +11,7 @@
 
 // LOADING AUDIO ONLY
 // Start off by initializing a new context.
-context = new webkitAudioContext();
+context = new AudioContext();
 
 // shim layer with setTimeout fallback
 window.requestAnimFrame = (function(){
@@ -106,3 +106,34 @@ BufferLoader.prototype.load = function() {
 };
 
 // MANIPULATE WITH FILTER
+
+
+
+//BUTTONS 
+// var audioClip = document.getElementById("audioClip"); 
+// var audioVolume = document.getElementById("audioVolume");
+// var playButton = document.getElementById("play-pause-button");
+
+// binds audio volume to slider input
+// function slideVolume() {
+//     audioClip.volume = audioVolume.value;
+// }
+
+// button that lets you play or pause the audio
+function playPause() {
+    if (audioClip.paused) {
+      audioClip.play();   
+    } else {
+        audioClip.pause();
+    }
+}
+
+//button text swaps when pressed
+function swapText() {
+    if (playButton.value === "Pause") {
+      playButton.value = "Play";
+    }
+    else {
+      playButton.value = "Pause";
+    }
+}
