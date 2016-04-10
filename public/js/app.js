@@ -8,83 +8,101 @@
 //to-do: what to do about more than one piece
 //to-do: re-add sliders
 
-/* Hoist some variables. */
-var audio, context;
 
-/* Try instantiating a new AudioContext, throw an error if it fails. */
-try {
-    /* Setup an AudioContext. */
-    context = new AudioContext();
-} catch(e) {
-    throw new Error('The Web Audio API is unavailable');
+// LOADING AUDIO ONLY
+// Start off by initializing a new context.
+context = new webkitAudioContext();
+
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+return  window.requestAnimationFrame       || 
+  window.webkitRequestAnimationFrame || 
+  window.mozRequestAnimationFrame    || 
+  window.oRequestAnimationFrame      || 
+  window.msRequestAnimationFrame     || 
+  function( callback ){
+  window.setTimeout(callback, 1000 / 60);
+};
+})();
+
+
+function playSound(buffer, time) {
+  var source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+  source.start(time);
 }
 
-/* Create a script processor node with a `bufferSize` of 1024. */
-var processor = context.createScriptProcessor(1024),
-    /* Create an analyser node */
-    analyser = context.createAnalyser();
-
-/* Wire the processor into our audio context. */
-processor.connect(context.destination);
-/* Wire the analyser into the processor */
-analyser.connect(processor);
-
-/* Define a Uint8Array to receive the analysers data. */
-var data = new Uint8Array(analyser.frequencyBinCount);
-
-/* Define a `Sound` Class */
-var Sound = {
-    /* Give the sound an element property initially undefined. */
-    element: undefined,
-    /* Define a class method of play which instantiates a new Media Element
-     * Source each time the file plays, once the file has completed disconnect 
-     * and destroy the media element source. */
-    play: function() {
-        var sound = context.createMediaElementSource(this.element);
-        this.element.onended = function() {
-            sound.disconnect();
-            sound = null;
-            /* Noop the audioprocess handler when the file finishes. */
-            processor.onaudioprocess = function() {};
-        }
-        /* Add the following line to wire into the analyser. */
-        sound.connect(analyser);
-        sound.connect(context.destination);
-
-        processor.onaudioprocess = function() {
-            /* Populate the data array with the frequency data. */
-            data = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteTimeDomainData(data);
-        };
-        /* Call `play` on the MediaElement. */
-        this.element.play();
+function loadSounds(obj, soundMap, callback) {
+  // Array-ify
+  var names = [];
+  var paths = [];
+  for (var name in soundMap) {
+    var path = soundMap[name];
+    names.push(name);
+    paths.push(path);
+  }
+  bufferLoader = new BufferLoader(context, paths, function(bufferList) {
+    for (var i = 0; i < bufferList.length; i++) {
+      var buffer = bufferList[i];
+      var name = names[i];
+      obj[name] = buffer;
     }
+    if (callback) {
+      callback();
+    }
+  });
+  bufferLoader.load();
+}
+
+
+
+
+function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true);
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    loader.context.decodeAudioData(
+      request.response,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
 };
 
-/* Create an async function which returns a promise of a playable audio element. */
-function loadAudioElement(url) {
-    return new Promise(function(resolve, reject) {
-        var audio = new Audio();
-        audio.addEventListener('canplay', function() {
-            /* Resolve the promise, passing through the element. */
-            resolve(audio);
-        });
-        /* Reject the promise on an error. */
-        audio.addEventListener('error', reject);
-        audio.src = url;
-        audio.crossOrigin = 'anonymous';
-    });
-}
+BufferLoader.prototype.load = function() {
+  for (var i = 0; i < this.urlList.length; ++i)
+  this.loadBuffer(this.urlList[i], i);
+};
 
-/* Let's load our file. */
-loadAudioElement('../media/Every_Step.mp3').then(function(elem) {
-    /* Instantiate the Sound class into our hoisted variable. */
-    audio = Object.create(Sound);
-    /* Set the element of `audio` to our MediaElement. */
-    audio.element = elem;
-    /* Immediately play the file. */
-    audio.play();
-}, function(elem) {
-    /* Let's throw an the error from the MediaElement if it fails. */
-    throw elem.error;
-});
+// MANIPULATE WITH FILTER
