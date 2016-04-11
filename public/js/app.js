@@ -168,19 +168,17 @@ FilterSample.prototype.changeQuality = function(element) {
   this.filter.Q.value = element.value * QUAL_MUL;
 };
 
-// FilterSample.prototype.toggleFilter = function(element) {
-//   this.source.disconnect(0);
-//   this.filter.disconnect(0);
-//   // Check if we want to enable the filter.
-//   if (element.checked) {
-//     // Connect through the filter.
-//     this.source.connect(this.filter);
-//     this.filter.connect(context.destination);
-//   } else {
-//     // Otherwise, connect directly.
-//     this.source.connect(context.destination);
-//   }
-// };
+//VISUALIZATION 
+// Assume that node A is ordinarily connected to B.
+var analyser = context.createAnalyser();
+A.connect(analyser);
+analyser.connect(B);
 
+
+
+
+
+
+//New sample
 var sample = new FilterSample();
 
