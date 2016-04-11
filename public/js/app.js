@@ -8,6 +8,18 @@
 //to-do: what to do about more than one piece
 //to-do: re-add sliders
 
+//button text swaps when pressed
+var playButton = document.getElementById("playPauseButton");
+
+function swapText() {
+    if (playButton.value === "Play") {
+      playButton.value = "Pause";
+    }
+    else {
+      playButton.value = "Play";
+    }
+}
+
 
 // LOADING AUDIO ONLY
 // Start off by initializing a new context.
@@ -106,34 +118,81 @@ BufferLoader.prototype.load = function() {
 };
 
 // MANIPULATE WITH FILTER
+var QUAL_MUL = 30;
 
+function FilterSample() {
+  this.isPlaying = false;
+  loadSounds(this, {buffer: 'media/The_Voyage.mp3'});
+};
 
+FilterSample.prototype.play = function() {
+  // Create the source.
+  var source = context.createBufferSource();
+  source.buffer = this.buffer;
+  // Create the filter.
+  var filter = context.createBiquadFilter();
+  filter.type = filter.LOWPASS;
+  filter.frequency.value = 5000;
+  // Connect source to filter, filter to destination.
+  source.connect(filter);
+  filter.connect(context.destination);
+  // Play!
+  source.start(0);
+  source.loop = true;
+  // Save source and filterNode for later access.
+  this.source = source;
+  this.filter = filter;
+};
+
+FilterSample.prototype.stop = function() {
+  this.source.stop(0);
+};
+
+FilterSample.prototype.toggle = function() {
+  this.isPlaying ? this.stop() : this.play();
+  this.isPlaying = !this.isPlaying;
+};
+
+FilterSample.prototype.changeFrequency = function(element) {
+  // Clamp the frequency between the minimum value (40 Hz) and half of the
+  // sampling rate.
+  var minValue = 40;
+  var maxValue = context.sampleRate / 2;
+  // Logarithm (base 2) to compute how many octaves fall in the range.
+  var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
+  // Compute a multiplier from 0 to 1 based on an exponential scale.
+  var multiplier = Math.pow(2, numberOfOctaves * (element.value - 1.0));
+  // Get back to the frequency value between min and max.
+  this.filter.frequency.value = maxValue * multiplier;
+};
+
+FilterSample.prototype.changeQuality = function(element) {
+  this.filter.Q.value = element.value * QUAL_MUL;
+};
+
+FilterSample.prototype.toggleFilter = function(element) {
+  this.source.disconnect(0);
+  this.filter.disconnect(0);
+  // Check if we want to enable the filter.
+  if (element.checked) {
+    // Connect through the filter.
+    this.source.connect(this.filter);
+    this.filter.connect(context.destination);
+  } else {
+    // Otherwise, connect directly.
+    this.source.connect(context.destination);
+  }
+};
+
+var sample = new FilterSample();
 
 //BUTTONS 
 // var audioClip = document.getElementById("audioClip"); 
 // var audioVolume = document.getElementById("audioVolume");
-// var playButton = document.getElementById("play-pause-button");
 
 // binds audio volume to slider input
 // function slideVolume() {
 //     audioClip.volume = audioVolume.value;
 // }
 
-// button that lets you play or pause the audio
-function playPause() {
-    if (audioClip.paused) {
-      audioClip.play();   
-    } else {
-        audioClip.pause();
-    }
-}
 
-//button text swaps when pressed
-function swapText() {
-    if (playButton.value === "Pause") {
-      playButton.value = "Play";
-    }
-    else {
-      playButton.value = "Pause";
-    }
-}
