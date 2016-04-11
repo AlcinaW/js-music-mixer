@@ -21,8 +21,10 @@ function swapText() {
 }
 
 // LOADING AUDIO ONLY
+//in case not Chrome 
+//var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 // initializing a new context
-context = new AudioContext();
+context = new (window.AudioContext || window.webkitAudioContext)();
 
 // setTimeout fallback
 window.requestAnimFrame = (function(){
