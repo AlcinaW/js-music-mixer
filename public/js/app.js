@@ -114,7 +114,7 @@ BufferLoader.prototype.load = function() {
 };
 
 // MANIPULATE WITH FILTER
-var QUAL_MUL = 30;
+var QUAL_MUL = 35;
 
 function FilterSample() {
   this.isPlaying = false;
