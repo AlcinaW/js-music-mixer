@@ -20,12 +20,11 @@ function swapText() {
     }
 }
 
-
 // LOADING AUDIO ONLY
-// Start off by initializing a new context.
+// initializing a new context
 context = new AudioContext();
 
-// shim layer with setTimeout fallback
+// setTimeout fallback
 window.requestAnimFrame = (function(){
 return  window.requestAnimationFrame       || 
   window.webkitRequestAnimationFrame || 
@@ -66,9 +65,6 @@ function loadSounds(obj, soundMap, callback) {
   });
   bufferLoader.load();
 }
-
-
-
 
 function BufferLoader(context, urlList, callback) {
   this.context = context;
@@ -126,20 +122,20 @@ function FilterSample() {
 };
 
 FilterSample.prototype.play = function() {
-  // Create the source.
+  // Create the source
   var source = context.createBufferSource();
   source.buffer = this.buffer;
-  // Create the filter.
+  // Create the filter
   var filter = context.createBiquadFilter();
   filter.type = filter.LOWPASS;
   filter.frequency.value = 5000;
-  // Connect source to filter, filter to destination.
+  // Connect source to filter, filter to destination
   source.connect(filter);
   filter.connect(context.destination);
-  // Play!
+  // Play
   source.start(0);
   source.loop = true;
-  // Save source and filterNode for later access.
+  // Save source and filterNode for later access
   this.source = source;
   this.filter = filter;
 };
@@ -170,29 +166,19 @@ FilterSample.prototype.changeQuality = function(element) {
   this.filter.Q.value = element.value * QUAL_MUL;
 };
 
-FilterSample.prototype.toggleFilter = function(element) {
-  this.source.disconnect(0);
-  this.filter.disconnect(0);
-  // Check if we want to enable the filter.
-  if (element.checked) {
-    // Connect through the filter.
-    this.source.connect(this.filter);
-    this.filter.connect(context.destination);
-  } else {
-    // Otherwise, connect directly.
-    this.source.connect(context.destination);
-  }
-};
+// FilterSample.prototype.toggleFilter = function(element) {
+//   this.source.disconnect(0);
+//   this.filter.disconnect(0);
+//   // Check if we want to enable the filter.
+//   if (element.checked) {
+//     // Connect through the filter.
+//     this.source.connect(this.filter);
+//     this.filter.connect(context.destination);
+//   } else {
+//     // Otherwise, connect directly.
+//     this.source.connect(context.destination);
+//   }
+// };
 
 var sample = new FilterSample();
-
-//BUTTONS 
-// var audioClip = document.getElementById("audioClip"); 
-// var audioVolume = document.getElementById("audioVolume");
-
-// binds audio volume to slider input
-// function slideVolume() {
-//     audioClip.volume = audioVolume.value;
-// }
-
 
