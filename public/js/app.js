@@ -25,6 +25,7 @@ function swapText() {
 //var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 // initializing a new context
 context = new (window.AudioContext || window.webkitAudioContext)();
+var analyser = context.createAnalyser();
 
 // setTimeout fallback
 window.requestAnimFrame = (function(){
@@ -170,10 +171,9 @@ FilterSample.prototype.changeQuality = function(element) {
 
 //VISUALIZATION 
 // Assume that node A is ordinarily connected to B.
-var analyser = context.createAnalyser();
-A.connect(analyser);
-analyser.connect(B);
-
+// var analyser = context.createAnalyser();
+// A.connect(analyser);
+// analyser.connect(B);
 
 
 
@@ -181,4 +181,5 @@ analyser.connect(B);
 
 //New sample
 var sample = new FilterSample();
+//var sample = new VisualizerSample();
 
