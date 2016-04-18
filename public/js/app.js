@@ -25,20 +25,6 @@ function swapText() {
 //var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 // initializing a new context
 context = new (window.AudioContext || window.webkitAudioContext)();
-var analyser = context.createAnalyser();
-
-// setTimeout fallback
-window.requestAnimFrame = (function(){
-return  window.requestAnimationFrame       || 
-  window.webkitRequestAnimationFrame || 
-  window.mozRequestAnimationFrame    || 
-  window.oRequestAnimationFrame      || 
-  window.msRequestAnimationFrame     || 
-  function( callback ){
-  window.setTimeout(callback, 1000 / 60);
-};
-})();
-
 
 function playSound(buffer, time) {
   var source = context.createBufferSource();
@@ -175,9 +161,35 @@ FilterSample.prototype.changeQuality = function(element) {
 // A.connect(analyser);
 // analyser.connect(B);
 
+//VIZ START
+var analyser = context.createAnalyser();
+// source = context.createMediaStreamSource(stream);
+// source.connect(analyser);
+// analyser.connect(distortion);
 
 
+// // Create arrays to store sound data
+// var fFrequencyData = new Float32Array(analyser.frequencyBinCount);
+// var bFrequencyData = new Uint8Array(analyser.frequencyBinCount);
+ 
+// // Retrieve data
+// analyser.getFloatFrequencyData(fFrequencyData);
+// analyser.getByteFrequencyData(bFrequencyData);
+// analyser.getByteTimeDomainData(bFrequencyData);
 
+// // setTimeout fallback
+// window.requestAnimFrame = (function(){
+// return  window.requestAnimationFrame       || 
+//   window.webkitRequestAnimationFrame || 
+//   window.mozRequestAnimationFrame    || 
+//   window.oRequestAnimationFrame      || 
+//   window.msRequestAnimationFrame     || 
+//   function( callback ){
+//   window.setTimeout(callback, 1000 / 60);
+// };
+// })();
+
+// VIZ END
 
 //New sample
 var sample = new FilterSample();

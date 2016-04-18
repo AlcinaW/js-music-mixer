@@ -10,6 +10,7 @@
 
 
 <p><input type="button" onclick="swapText();sample.toggle();" value="Play" id="playPauseButton"></p>
+<p><input type="checkbox" id="c1" checked="false" onchange="sample.toggleFilter(this);">
 
 <p><input type="range" min="0" max="1" step="0.01" value="1" onmousemove="console.log(this.value);sample.changeFrequency(this);"> Frequency</p>
 
