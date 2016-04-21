@@ -9,20 +9,45 @@
 	<h1>Amuse</h1>
 
 
-<p><input type="button" onclick="swapText();sample.toggle();" value="Play" id="playPauseButton"></p>
-<p><input type="checkbox" id="c1" checked="false" onchange="sample.toggleFilter(this);">
+<div class='controls'>
+    <button class="play" disabled>Loading...</button>
+    <button class="stop" disabled>Stop</button>
+</div>
+<div class='play-controls'>
+	    <label for='playbackRate'>playback rate <span class='rate'>1</span>
+	        <input class='playback-slider' name='playbackRate' type='range' min='0' max='10' step='0.05' value='1' disabled />
+	    </label>
 
-<p><input type="range" min="0" max="1" step="0.01" value="1" onmousemove="console.log(this.value);sample.changeFrequency(this);"> Frequency</p>
+	<hr>
 
-<p><input type="range" min="0" max="1" step="0.01" value="0" onmousemove="console.log(this.value);sample.changeQuality(this);"> Quality</p>
+	<div class='filter-controls'>
+	    <label for='filterFreq'>filter frequency <span class='freq'>2500Hz</span>
 
-<canvas id="canvas"></canvas>
+	        <input class='filter-slider' name='filterFreq' type='range' min='0' max='20000' step='10' value='2500' disabled />
+	    </label>
+	    <label>quality (Q) value <span class='filter-q-value'>1</span> 
+	        <input class="filter-q-slider" type="range" min=".0001" max="10" step=".0005" value="1" disabled/>
+	    </label>
+	    <label>filter gain value <span class='filter-gain-value'>0</span> 
+	        <input class="filter-gain-slider" type="range" min="-40" max="40" step="1" value="0" disabled/>
+	    </label>
+	    <p>filter type</p>
+	    <select name="filterType" class="filtertype">
+	        <option value="lowpass">lowpass</option>
+	        <option value="highpass">highpass</option>
+	        <option value="bandpass">bandpass</option>
+	        <option value="lowshelf">lowshelf</option>
+	        <option value="highshelf">highshelf</option>
+	        <option value="peaking">peaking</option>
+	        <option value="notch">notch</option>
+	        <option value="allpass">allpass</option>
+	    </select>
+	</div>
+</div>
+
+<canvas class="canvas"></canvas>
 
 
-
-	<!--<script type="text/javascript" src="js/three.js"></script>
-	<script type="text/javascript" src="js/tone.js"></script>-->
 	<script type="text/javascript" src="js/app.js"></script>
-	<!-- <script type="text/javascript" src="js/pixi.js"></script> -->
 </body>
 </html>
