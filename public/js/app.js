@@ -13,11 +13,14 @@
 
 // LOADING AUDIO ONLY
 var analyser;
+
+var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
+    gainNode = audioContext.createGain();
 
-    analyser = audioContext.createAnalyser(),
+    //analyser = audioContext.createAnalyser(),
     //analyser.smoothingTimeConstant = 0.8, //0<->1. 0 is no time smoothing
     //analyser.fftSize = 1024,
     //analyser.connect(audioContext.destination),
@@ -88,24 +91,24 @@ function setupSound() {
     //sound.connect(audioContext.destination);
 
     // setup a javascript node
-    javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
+    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
     // connect to destination, else it isn't called
     //javascriptNode.connect(audioContext.destination),
     sound.connect(filter); //can connect more than one to a node?
-    sound.connect(analyser); //new 
-    analyser.connect(javascriptNode); //new
+    //sound.connect(analyser); //new 
+    //analyser.connect(javascriptNode); //new
     //sound.connect(audioContext.destination);
     filter.connect(audioContext.destination);
 }
 
 // setup sound, loop, and connect to destination
-function setupSound() {
-    sound = audioContext.createBufferSource();
-    sound.buffer = sampleBuffer;
-    sound.loop = loop;
-    sound.connect(filter);
-    filter.connect(audioContext.destination);
-}
+// function setupSound() {
+//     sound = audioContext.createBufferSource();
+//     sound.buffer = sampleBuffer;
+//     sound.loop = loop;
+//     sound.connect(filter);
+//     filter.connect(audioContext.destination);
+// }
 
 // play sound and enable / disable buttons
 function playSound() {
