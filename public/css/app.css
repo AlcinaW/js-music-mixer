@@ -5,6 +5,7 @@ body {
 
 canvas {
 	border: 1px solid black;
-	height: 300px;
-	width: 500px;
+	height: 325px;
+	width: 1000px;
+	display: block;
 }
