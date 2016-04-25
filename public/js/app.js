@@ -12,7 +12,6 @@
 
 
 // LOADING AUDIO ONLY
-<<<<<<< HEAD
 //var analyser;
 
 var sampleBuffer;
@@ -28,13 +27,7 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
-  
-=======
-//To-DO: change to camelcase, for UI buttons maybe rewrite
-var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
-    filter = audioContext.createBiquadFilter(),
-    
->>>>>>> parent of 171f514... analyzer
+
     //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
@@ -99,6 +92,7 @@ function setupSound() {
     sound.loop = loop; //auto is false
     sound.playbackRate.value = playbackSlider.value;
     //sound.connect(audioContext.destination);
+
 
     // setup a javascript node
     //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
