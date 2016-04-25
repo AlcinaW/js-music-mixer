@@ -12,18 +12,35 @@
 
 
 // LOADING AUDIO ONLY
+//var analyser;
+
+//var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
-    
+
     //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
     sampleBuffer, sound, playButton = document.querySelector('.play'),
+
+    //gainNode = audioContext.createGain(); //for volume control
+
+    analyser = audioContext.createAnalyser(),
+    //analyser.smoothingTimeConstant = 0.8, //0<->1. 0 is no time smoothing
+    //analyser.fftSize = 1024,
+    //analyser.minDecibels = -90;
+    //analyser.maxDecibels = -10;
+    //analyser.connect(audioContext.destination),
+
+    // Create a gain node
+    gainNode = audioContext.createGain();
+
     stopButton = document.querySelector('.stop'),
     loop = true,
     playbackSlider = document.querySelector('.playback-slider'),
     playbackRate = document.querySelector('.rate'),
+    console.log(playbackRate),
 
     filterType = document.querySelector('.filtertype'),
     filterFreq = document.querySelector('.freq'),
@@ -33,7 +50,13 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filterQSlider = document.querySelector('.filter-q-slider'),
 
     filterGain = document.querySelector('.filter-gain-value'),
-    filterGainSlider = document.querySelector('.filter-gain-slider');
+    console.log(filterGain),
+    filterGainSlider = document.querySelector('.filter-gain-slider'),
+    
+    gainValue = document.querySelector('.gain'), //for the volume
+    console.log("gainValue: " + gainValue.innerHTML.value),
+    console.log("gainValue.value: " + gainValue.value),
+    gainSlider = document.querySelector('.gain-slider');   
 
 // load sound
 init();
@@ -54,6 +77,9 @@ playbackSlider.oninput = function () {
     changeRate(playbackSlider.value);
 };
 
+gainSlider.oninput = function () {
+    changeGain(gainSlider.value);
+};
 
 // function to load sounds via AJAX
 function loadSound(url) {
@@ -81,18 +107,34 @@ function setupSound() {
     sound.playbackRate.value = playbackSlider.value;
     //sound.connect(audioContext.destination);
 
+    // Reduce the volume
+    sound.gainValue.value = gainSlider.value;
+
+    // setup a javascript node
+    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
+    // connect to destination, else it isn't called
+    //javascriptNode.connect(audioContext.destination),
     sound.connect(filter); //can connect more than one to a node?
+    //sound.connect(analyser); //new 
+    //analyser.connect(javascriptNode); //new
+    //sound.connect(audioContext.destination);
+
     filter.connect(audioContext.destination);
+
+    // Connect the source to the gain node.
+    sound.connect(gainNode);
+    // Connect the gain node to the destination.
+    gainNode.connect(audioContext.destination);
 }
 
 // setup sound, loop, and connect to destination
-function setupSound() {
-    sound = audioContext.createBufferSource();
-    sound.buffer = sampleBuffer;
-    sound.loop = loop;
-    sound.connect(filter);
-    filter.connect(audioContext.destination);
-}
+// function setupSound() {
+//     sound = audioContext.createBufferSource();
+//     sound.buffer = sampleBuffer;
+//     sound.loop = loop;
+//     sound.connect(filter);
+//     filter.connect(audioContext.destination);
+// }
 
 // play sound and enable / disable buttons
 function playSound() {
@@ -116,11 +158,19 @@ function changeRate(rate) {
     console.log(rate);
 }
 
+// change playback speed/rate
+function changeGain(gain) {
+    sound.gainValue.value = gain;
+    gainValue.innerHTML = gain;
+    console.log(gain);
+}
+
 function UI(state){
     switch(state){
         case 'play':
             playButton.disabled = true;
             stopButton.disabled = false;
+            gainSlider.disabled = false; //volume
             playbackSlider.disabled = false;
             filterFreqSlider.disabled = false;
             filterQSlider.disabled = false;
@@ -129,6 +179,7 @@ function UI(state){
         case 'stop':
             playButton.disabled = false;
             stopButton.disabled = true;
+            gainSlider.disabled = true;
             playbackSlider.disabled = true;
             filterFreqSlider.disabled = true;
             filterQSlider.disabled = true;
