@@ -12,7 +12,7 @@
 
 
 // LOADING AUDIO ONLY
-var analyser;
+//var analyser;
 
 var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
@@ -24,7 +24,10 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //analyser.smoothingTimeConstant = 0.8, //0<->1. 0 is no time smoothing
     //analyser.fftSize = 1024,
     //analyser.connect(audioContext.destination),
-    
+//To-DO: change to camelcase, for UI buttons maybe rewrite
+var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
+    filter = audioContext.createBiquadFilter(),
+  
     //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
@@ -98,6 +101,7 @@ function setupSound() {
     //sound.connect(analyser); //new 
     //analyser.connect(javascriptNode); //new
     //sound.connect(audioContext.destination);
+
     filter.connect(audioContext.destination);
 }
 
