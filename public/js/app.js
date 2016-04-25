@@ -12,6 +12,7 @@
 
 
 // LOADING AUDIO ONLY
+<<<<<<< HEAD
 //var analyser;
 
 var sampleBuffer;
@@ -28,6 +29,12 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
   
+=======
+//To-DO: change to camelcase, for UI buttons maybe rewrite
+var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
+    filter = audioContext.createBiquadFilter(),
+    
+>>>>>>> parent of 171f514... analyzer
     //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
