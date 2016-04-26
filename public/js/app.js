@@ -27,20 +27,19 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //gainNode = audioContext.createGain(); //for volume control
 
     analyser = audioContext.createAnalyser(),
-    //analyser.smoothingTimeConstant = 0.8, //0<->1. 0 is no time smoothing
+    analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
     //analyser.fftSize = 1024,
-    //analyser.minDecibels = -90;
-    //analyser.maxDecibels = -10;
-    //analyser.connect(audioContext.destination),
+    analyser.fftSize = 256,
+    analyser.minDecibels = -90,
+    analyser.maxDecibels = -10,
 
     // Create a gain node
-    gainNode = audioContext.createGain();
+    gainNode = audioContext.createGain(),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
     playbackSlider = document.querySelector('.playback-slider'),
     playbackRate = document.querySelector('.rate'),
-    console.log(playbackRate),
 
     filterType = document.querySelector('.filtertype'),
     filterFreq = document.querySelector('.freq'),
@@ -50,12 +49,10 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filterQSlider = document.querySelector('.filter-q-slider'),
 
     filterGain = document.querySelector('.filter-gain-value'),
-    console.log(filterGain),
     filterGainSlider = document.querySelector('.filter-gain-slider'),
     
     gainValue = document.querySelector('.gain'), //for the volume
-    console.log("gainValue: " + gainValue.innerHTML.value),
-    console.log("gainValue.value: " + gainValue.value),
+
     gainSlider = document.querySelector('.gain-slider');   
 
 // load sound
@@ -92,7 +89,7 @@ function loadSound(url) {
             var soundLength = buffer.duration;
             sampleBuffer = buffer;
             playButton.disabled = false;
-            playButton.innerHTML = 'play';
+            playButton.innerHTML = 'Play';
         });
     };
 
@@ -108,24 +105,21 @@ function setupSound() {
     sound.playbackRate.value = playbackSlider.value;
     //sound.connect(audioContext.destination);
 
-    // Reduce the volume
-    //sound.gainValue.value = gainSlider.value;
-
-    // setup a javascript node
-    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
-    // connect to destination, else it isn't called
-    //javascriptNode.connect(audioContext.destination),
     sound.connect(filter); //can connect more than one to a node?
-    //sound.connect(analyser); //new 
-    //analyser.connect(javascriptNode); //new
-    //sound.connect(audioContext.destination);
-
-    //filter.connect(audioContext.destination);
-
+    
     // Connect the source to the gain node.
     filter.connect(gainNode);
     // Connect the gain node to the destination.
     gainNode.connect(audioContext.destination);
+
+    // setup a javascript node
+    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+    // connect to destination, else it isn't called
+    
+    //javascriptNode.connect(audioContext.destination),
+
+    //sound.connect(analyser); //new 
+    //analyser.connect(javascriptNode); //new
 }
 
 // setup sound, loop, and connect to destination
