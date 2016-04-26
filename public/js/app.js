@@ -100,6 +100,7 @@ function loadSound(url) {
 }
 
 // set our sound buffer, loop, and connect to destination
+// connect each node to each other in a chain, and then connect to audioContext.destination!
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -108,7 +109,7 @@ function setupSound() {
     //sound.connect(audioContext.destination);
 
     // Reduce the volume
-    sound.gainValue.value = gainSlider.value;
+    //sound.gainValue.value = gainSlider.value;
 
     // setup a javascript node
     //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
@@ -119,10 +120,10 @@ function setupSound() {
     //analyser.connect(javascriptNode); //new
     //sound.connect(audioContext.destination);
 
-    filter.connect(audioContext.destination);
+    //filter.connect(audioContext.destination);
 
     // Connect the source to the gain node.
-    sound.connect(gainNode);
+    filter.connect(gainNode);
     // Connect the gain node to the destination.
     gainNode.connect(audioContext.destination);
 }
@@ -160,7 +161,7 @@ function changeRate(rate) {
 
 // change playback speed/rate
 function changeGain(gain) {
-    sound.gainValue.value = gain;
+    gainNode.gain.value = gain;
     gainValue.innerHTML = gain;
     console.log(gain);
 }
