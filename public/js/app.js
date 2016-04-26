@@ -27,11 +27,8 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //gainNode = audioContext.createGain(); //for volume control
 
     analyser = audioContext.createAnalyser(),
-    analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
-    //analyser.fftSize = 1024,
-    analyser.fftSize = 256,
-    analyser.minDecibels = -90,
-    analyser.maxDecibels = -10,
+    
+    javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
 
     // Create a gain node
     gainNode = audioContext.createGain(),
@@ -103,7 +100,12 @@ function setupSound() {
     sound.buffer = sampleBuffer;
     sound.loop = loop; //auto is false
     sound.playbackRate.value = playbackSlider.value;
-    //sound.connect(audioContext.destination);
+
+    analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
+    //analyser.fftSize = 1024,
+    analyser.fftSize = 256,
+    analyser.minDecibels = -90,
+    analyser.maxDecibels = -10,
 
     sound.connect(filter); //can connect more than one to a node?
     
