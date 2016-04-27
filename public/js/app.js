@@ -113,6 +113,9 @@ function setupSound() {
     
     // Connect the source to the gain node.
     filter.connect(gainNode);
+    filter.connect(analyser);
+    analyser.connect(scriptProcessorNode);
+    scriptProcessorNode.connect(gainNode)
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
     //gainNode.connect(analyser);
