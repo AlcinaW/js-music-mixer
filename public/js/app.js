@@ -24,14 +24,15 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     sampleURL = '../media/The_Voyage.mp3',
     sampleBuffer, sound, playButton = document.querySelector('.play'),
 
-    //gainNode = audioContext.createGain(); //for volume control
+    // Create a gain node
+    gainNode = audioContext.createGain(),
 
     analyser = audioContext.createAnalyser(),
     
-    javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
+    //depreciated, use script processor node
+    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
 
-    // Create a gain node
-    gainNode = audioContext.createGain(),
+    scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -95,6 +96,7 @@ function loadSound(url) {
 
 // set our sound buffer, loop, and connect to destination
 // connect each node to each other in a chain, and then connect to audioContext.destination!
+//javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -111,8 +113,13 @@ function setupSound() {
     
     // Connect the source to the gain node.
     filter.connect(gainNode);
-    // Connect the gain node to the destination.
+    // Connect the gain node to the destination
+
+    //gainNode.connect(analyser);
     gainNode.connect(audioContext.destination);
+
+    //analyser.connect(scriptProcessorNode);
+    //scriptProcessorNode.connect(audioContext.destination);
 
     // setup a javascript node
     //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
