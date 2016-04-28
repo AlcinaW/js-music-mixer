@@ -115,32 +115,10 @@ function setupSound() {
     filter.connect(gainNode);
     filter.connect(analyser);
     analyser.connect(scriptProcessorNode);
-    scriptProcessorNode.connect(gainNode)
+    scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
-    //gainNode.connect(analyser);
-
-    //analyser.connect(scriptProcessorNode);
-    //scriptProcessorNode.connect(audioContext.destination);
-
-    // setup a javascript node
-    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
-    // connect to destination, else it isn't called
-    
-    //javascriptNode.connect(audioContext.destination),
-
-    //sound.connect(analyser); //new 
-    //analyser.connect(javascriptNode); //new
 }
-
-// setup sound, loop, and connect to destination
-// function setupSound() {
-//     sound = audioContext.createBufferSource();
-//     sound.buffer = sampleBuffer;
-//     sound.loop = loop;
-//     sound.connect(filter);
-//     filter.connect(audioContext.destination);
-// }
 
 // play sound and enable / disable buttons
 function playSound() {
