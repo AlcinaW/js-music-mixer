@@ -16,23 +16,22 @@
 
 //var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
+//new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
-
-    //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
     sampleBuffer, sound, playButton = document.querySelector('.play'),
 
-    // Create a gain node
+    // gain node = volume out of 1
     gainNode = audioContext.createGain(),
-
-    analyser = audioContext.createAnalyser(),
     
-    //depreciated, use script processor node
-    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
-
+    //for analyzing audio, analyserNode method
+    analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
+    source, fbc_array, bars, bars_x, bar_width, bar_height, 
+    canvas = document.querySelector('.canvas'), 
+    ctx = canvas.getContext('2d'),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -118,7 +117,24 @@ function setupSound() {
     scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
+    frameLooper();
 }
+
+function frameLooper(){
+    window.requestAnimationFrame(frameLooper);
+    fbc_array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fbc_array);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    ctx.fillStyle = '#5a0d5f'; // Color of the bars
+    bars = 100;
+    for (var i = 0; i < bars; i++) {
+        bar_x = i * 3;
+        bar_width = 2;
+        bar_height = -(fbc_array[i] / 2);
+        ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
+    }
+}
+
 
 // play sound and enable / disable buttons
 function playSound() {
