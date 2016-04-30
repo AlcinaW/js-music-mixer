@@ -30,8 +30,9 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     source, fbc_array, bars, bars_x, bar_width, bar_height, 
-    canvas = document.querySelector('.canvas'), 
-    ctx = canvas.getContext('2d'),
+    canvasOne = document.querySelector('.canvasOne'), 
+    ctx = canvasOne.getContext('2d'),
+
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -104,9 +105,12 @@ function setupSound() {
 
     analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
     //analyser.fftSize = 1024,
-    analyser.fftSize = 256,
+    analyser.fftSize = 2048,
     analyser.minDecibels = -90,
     analyser.maxDecibels = -10,
+    // analyser.fftSize = 2048,
+    // bufferLength = analyser.frequencyBinCount,
+    // dataArray = new Uint8Array(bufferLength),
 
     sound.connect(filter); //can connect more than one to a node?
     
@@ -117,21 +121,21 @@ function setupSound() {
     scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
-    frameLooper();
+    barVizLooper();
 }
 
-function frameLooper(){
-    window.requestAnimationFrame(frameLooper);
+function barVizLooper(){
+    window.requestAnimationFrame(barVizLooper);
     fbc_array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(fbc_array);
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    ctx.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
     ctx.fillStyle = '#5a0d5f'; // Color of the bars
     bars = 100;
     for (var i = 0; i < bars; i++) {
         bar_x = i * 3;
         bar_width = 2;
         bar_height = -(fbc_array[i] / 2);
-        ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
+        ctx.fillRect(bar_x, canvasOne.height, bar_width, bar_height);
     }
 }
 

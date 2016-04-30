@@ -1,14 +1,19 @@
+body, div, canvas {
+    margin: 0;
+    padding: 0;
+}
 body {
 	font-size: 18px
-	margin: 0px;
 	overflow: hidden;
 }
 
-canvas {
+.canvasOne, .canvasTwo {
 	border: 1px solid black;
 	height: 320px;
 	width: 1000px;
 }
+
+
 #fullWin {
 	position: absolute;
 	width: 100%;
