@@ -29,29 +29,30 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
-    source, fbc_array, bars, bars_x, bar_width, bar_height, 
+    source, fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
     canvasOne = document.querySelector('.canvasOne'), 
-    ctx = canvasOne.getContext('2d'),
-
+    ctxOne = canvasOne.getContext('2d'),
+    canvasTwo = document.querySelector('.canvasTwo'), 
+    ctxTwo = canvasTwo.getContext('2d'),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
-    playbackSlider = document.querySelector('.playback-slider'),
+    playbackSlider = document.querySelector('.playbackSlider'),
     playbackRate = document.querySelector('.rate'),
 
-    filterType = document.querySelector('.filtertype'),
+    filterType = document.querySelector('.filterType'),
     filterFreq = document.querySelector('.freq'),
-    filterFreqSlider = document.querySelector('.filter-slider'),
+    filterFreqSlider = document.querySelector('.filterSlider'),
 
-    filterQ = document.querySelector('.filter-q-value'),
-    filterQSlider = document.querySelector('.filter-q-slider'),
+    filterQ = document.querySelector('.filterQValue'),
+    filterQSlider = document.querySelector('.filterQSlider'),
 
-    filterGain = document.querySelector('.filter-gain-value'),
-    filterGainSlider = document.querySelector('.filter-gain-slider'),
+    filterGain = document.querySelector('.filterGainValue'),
+    filterGainSlider = document.querySelector('.filterGainSlider'),
     
     gainValue = document.querySelector('.gain'), //for the volume
 
-    gainSlider = document.querySelector('.gain-slider');   
+    gainSlider = document.querySelector('.gainSlider');   
 
 // load sound
 init();
@@ -108,9 +109,6 @@ function setupSound() {
     analyser.fftSize = 2048,
     analyser.minDecibels = -90,
     analyser.maxDecibels = -10,
-    // analyser.fftSize = 2048,
-    // bufferLength = analyser.frequencyBinCount,
-    // dataArray = new Uint8Array(bufferLength),
 
     sound.connect(filter); //can connect more than one to a node?
     
@@ -122,23 +120,28 @@ function setupSound() {
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
     barVizLooper();
+    //waveVizLooper();
 }
 
 function barVizLooper(){
     window.requestAnimationFrame(barVizLooper);
-    fbc_array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(fbc_array);
-    ctx.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
-    ctx.fillStyle = '#5a0d5f'; // Color of the bars
+    fbcArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fbcArray);
+    ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
+    ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
     bars = 100;
     for (var i = 0; i < bars; i++) {
-        bar_x = i * 3;
-        bar_width = 2;
-        bar_height = -(fbc_array[i] / 2);
-        ctx.fillRect(bar_x, canvasOne.height, bar_width, bar_height);
+        barX = i * 3;
+        barWidth = 2;
+        barHeight = -(fbcArray[i] / 2);
+        ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
     }
 }
 
+// function waveVizLooper(){
+//     window.requestAnimationFrame(waveVizLooper);
+
+// }
 
 // play sound and enable / disable buttons
 function playSound() {
