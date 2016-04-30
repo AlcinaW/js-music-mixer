@@ -16,47 +16,43 @@
 
 //var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
+//new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
-
-    //convolver = audioContext.createConvolver(),
 
     sampleURL = '../media/The_Voyage.mp3',
     sampleBuffer, sound, playButton = document.querySelector('.play'),
 
-    //gainNode = audioContext.createGain(); //for volume control
-
+    // gain node = volume out of 1
+    gainNode = audioContext.createGain(),
+    
+    //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
-    //analyser.smoothingTimeConstant = 0.8, //0<->1. 0 is no time smoothing
-    //analyser.fftSize = 1024,
-    //analyser.minDecibels = -90;
-    //analyser.maxDecibels = -10;
-    //analyser.connect(audioContext.destination),
-
-    // Create a gain node
-    gainNode = audioContext.createGain();
+    scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
+    source, fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
+    canvasOne = document.querySelector('.canvasOne'), 
+    ctxOne = canvasOne.getContext('2d'),
+    canvasTwo = document.querySelector('.canvasTwo'), 
+    ctxTwo = canvasTwo.getContext('2d'),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
-    playbackSlider = document.querySelector('.playback-slider'),
+    playbackSlider = document.querySelector('.playbackSlider'),
     playbackRate = document.querySelector('.rate'),
-    console.log(playbackRate),
 
-    filterType = document.querySelector('.filtertype'),
+    filterType = document.querySelector('.filterType'),
     filterFreq = document.querySelector('.freq'),
-    filterFreqSlider = document.querySelector('.filter-slider'),
+    filterFreqSlider = document.querySelector('.filterSlider'),
 
-    filterQ = document.querySelector('.filter-q-value'),
-    filterQSlider = document.querySelector('.filter-q-slider'),
+    filterQ = document.querySelector('.filterQValue'),
+    filterQSlider = document.querySelector('.filterQSlider'),
 
-    filterGain = document.querySelector('.filter-gain-value'),
-    console.log(filterGain),
-    filterGainSlider = document.querySelector('.filter-gain-slider'),
+    filterGain = document.querySelector('.filterGainValue'),
+    filterGainSlider = document.querySelector('.filterGainSlider'),
     
     gainValue = document.querySelector('.gain'), //for the volume
-    console.log("gainValue: " + gainValue.innerHTML.value),
-    console.log("gainValue.value: " + gainValue.value),
-    gainSlider = document.querySelector('.gain-slider');   
+
+    gainSlider = document.querySelector('.gainSlider');   
 
 // load sound
 init();
@@ -92,7 +88,7 @@ function loadSound(url) {
             var soundLength = buffer.duration;
             sampleBuffer = buffer;
             playButton.disabled = false;
-            playButton.innerHTML = 'play';
+            playButton.innerHTML = 'Play';
         });
     };
 
@@ -100,40 +96,51 @@ function loadSound(url) {
 }
 
 // set our sound buffer, loop, and connect to destination
+// connect each node to each other in a chain, and then connect to audioContext.destination!
+//javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
     sound.loop = loop; //auto is false
     sound.playbackRate.value = playbackSlider.value;
-    //sound.connect(audioContext.destination);
 
-    // Reduce the volume
-    sound.gainValue.value = gainSlider.value;
+    analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
+    //analyser.fftSize = 1024,
+    analyser.fftSize = 2048,
+    analyser.minDecibels = -90,
+    analyser.maxDecibels = -10,
 
-    // setup a javascript node
-    //javascriptNode = audioContext.createScriptProcessor(2048, 1, 1),
-    // connect to destination, else it isn't called
-    //javascriptNode.connect(audioContext.destination),
     sound.connect(filter); //can connect more than one to a node?
-    //sound.connect(analyser); //new 
-    //analyser.connect(javascriptNode); //new
-    //sound.connect(audioContext.destination);
-
-    filter.connect(audioContext.destination);
-
+    
     // Connect the source to the gain node.
-    sound.connect(gainNode);
-    // Connect the gain node to the destination.
+    filter.connect(gainNode);
+    filter.connect(analyser);
+    analyser.connect(scriptProcessorNode);
+    scriptProcessorNode.connect(gainNode);
+    // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
+    barVizLooper();
+    //waveVizLooper();
 }
 
-// setup sound, loop, and connect to destination
-// function setupSound() {
-//     sound = audioContext.createBufferSource();
-//     sound.buffer = sampleBuffer;
-//     sound.loop = loop;
-//     sound.connect(filter);
-//     filter.connect(audioContext.destination);
+function barVizLooper(){
+    window.requestAnimationFrame(barVizLooper);
+    fbcArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fbcArray);
+    ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
+    ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
+    bars = 100;
+    for (var i = 0; i < bars; i++) {
+        barX = i * 3;
+        barWidth = 2;
+        barHeight = -(fbcArray[i] / 2);
+        ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
+    }
+}
+
+// function waveVizLooper(){
+//     window.requestAnimationFrame(waveVizLooper);
+
 // }
 
 // play sound and enable / disable buttons
@@ -160,7 +167,7 @@ function changeRate(rate) {
 
 // change playback speed/rate
 function changeGain(gain) {
-    sound.gainValue.value = gain;
+    gainNode.gain.value = gain;
     gainValue.innerHTML = gain;
     console.log(gain);
 }
