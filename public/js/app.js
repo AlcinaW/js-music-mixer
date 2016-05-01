@@ -292,7 +292,7 @@ var Colors = {
 // };
 // render();
 
-var scene, camera, renderer;
+var scene, camera, renderer, geometry, material;
 
 var WIDTH  = window.innerWidth;
 var HEIGHT = window.innerHeight;
@@ -302,7 +302,7 @@ var SPEED = 0.01;
 function initialize() {
     scene = new THREE.Scene();
 
-    initCube();
+    initShape();
     initCamera();
     initRenderer();
 
@@ -320,21 +320,35 @@ function initRenderer() {
     renderer.setSize(WIDTH, HEIGHT);
 }
 
-function initCube() {
-    cube = new THREE.Mesh(new THREE.CubeGeometry(2, 2, 2), new THREE.MeshNormalMaterial());
-    scene.add(cube);
+function initShape() {
+    geometry = new THREE.IcosahedronGeometry(2, 0, 2);
+    material = new THREE.MeshNormalMaterial();
+
+    shape = new THREE.Mesh( geometry, material );
+    scene.add(shape);
 }
 
-function rotateCube() {
-    cube.rotation.x -= SPEED * 2;
-    cube.rotation.y -= SPEED;
-    cube.rotation.z -= SPEED * 3;
+function rotateShape() {
+    shape.rotation.x -= SPEED * 2;
+    shape.rotation.y -= SPEED;
+    shape.rotation.z -= SPEED * 3;
 }
 
 function render() {
     requestAnimationFrame(render);
-    rotateCube();
+    rotateShape();
     renderer.render(scene, camera);
+}
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
 }
 
 initialize();
