@@ -232,6 +232,12 @@ function changeFilterGain(gain) {
     filterGain.innerHTML = gain + 'dB';
 }
 
+//GUI controls
+// var gui = new DAT.GUI({
+//     height : 5 * 32 - 1
+// });
+
+
 //colours
 // var colours = {
 //     red:0xf25346,
@@ -240,48 +246,20 @@ function changeFilterGain(gain) {
 
 //START VISUALIZATION
 
+//THREEJS scene start
+var scene, camera, renderer, geometry, material, controls, container, width, height;
+
+// var width = ;
+// var height = ;
+
 //when window resizes, animation area will shift to fit
-// window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener( 'resize', onWindowResize, false );
 function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-
-
-
-// var scene = new THREE.Scene();
-// var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
-// var renderer = new THREE.WebGLRenderer();
-// renderer.setSize( window.innerWidth, window.innerHeight );
-// document.body.appendChild( renderer.domElement );
-
-// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-// var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-
-// var cube = new THREE.Mesh( geometry, material );
-// scene.add( cube );
-
-// camera.position.z = 5;
-
-// var render = function () {
-//     requestAnimationFrame( render );
-
-//     cube.rotation.x += 0.1;
-//     cube.rotation.y += 0.1;
-
-//     renderer.render(scene, camera);
-// };
-// render();
-
-
-//THREEJS scene start
-var scene, camera, renderer, geometry, material;
-
-//var speed = 0.01;
 
 function initialize() {
     scene = new THREE.Scene();
@@ -296,12 +274,16 @@ function initialize() {
     container.appendChild( renderer.domElement );
 }
 
+
+
 function initCamera() {
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
     //camera.position.set(0, 3.5, 5);
     camera.position.z =10;
-    controls = new THREE.OrbitControls( camera );
+    controls = new THREE.OrbitControls( camera, container );
     controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
