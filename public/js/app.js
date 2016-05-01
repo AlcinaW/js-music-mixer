@@ -16,7 +16,7 @@
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
 
-    sampleURL = '../media/The_Voyage.mp3',
+    sampleURL = '../media/Every_Step.mp3',
     sampleBuffer, sound, playButton = document.querySelector('.play'),
 
     // gain node = volume out of 1
@@ -26,11 +26,7 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     source, 
-    //fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
-    // canvasOne = document.querySelector('.canvasOne'), 
-    // ctxOne = canvasOne.getContext('2d'),
-    // canvasTwo = document.querySelector('.canvasTwo'), 
-    // ctxTwo = canvasTwo.getContext('2d'),
+    bufferLength,
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -93,8 +89,8 @@ function loadSound(url) {
 }
 
 // set our sound buffer, loop, and connect to destination
-// connect each node to each other in a chain, and then connect to audioContext.destination!
-//javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
+// connect each node to each other in a chain, and then connect to audioContext.destination
+// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -102,8 +98,7 @@ function setupSound() {
     sound.playbackRate.value = playbackSlider.value;
 
     analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
-    //analyser.fftSize = 1024,
-    analyser.fftSize = 2048,
+    analyser.fftSize = 2048, //analyser.fftSize = 1024,
     analyser.minDecibels = -90,
     analyser.maxDecibels = -10,
 
@@ -116,7 +111,19 @@ function setupSound() {
     scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
-    //barVizLooper();
+    
+    bufferLength = analyser.frequencyBinCount;
+    scriptProcessorNode.onaudioprocess = function(audioProcessingEvent) {
+
+    array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(array);
+    boost = 0;
+    for (var i = 0; i < array.length; i++) {
+        boost += array[i];
+    }
+        boost = boost / array.length;
+        }
+
 }
 
 // play sound and enable / disable buttons
@@ -131,6 +138,7 @@ function playSound() {
 // stop sound and enable / disable buttons
 function stopSound() {
     UI('stop');
+    //sound.disconnect(scriptProcessorNode); //disconnect when stopped
     sound.stop(0);
 }
 
@@ -237,17 +245,13 @@ function changeFilterGain(gain) {
 //     height : 5 * 32 - 1
 // });
 
-
-//colours
-// var colours = {
-//     red:0xf25346,
-//     blue:0x68c3c0,
-// };
-
 //START VISUALIZATION
 
 //THREEJS scene start
 var scene, camera, renderer, geometry, material, controls;
+var cubes = new Array();
+var numberOfBars = 60;
+var boost = 0;
 
 // var width = window.innerWidth;
 // var height = window.innerHeight;
@@ -256,15 +260,6 @@ var container = document.getElementById("threeJSContainer");
 
 var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
 var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
-
-//when window resizes, animation area will shift to fit
-// window.addEventListener( 'resize', onWindowResize, false );
-// function onWindowResize(){
-//     camera.aspect = containerWidth / containerHeight;
-//     camera.updateProjectionMatrix();
-
-//     renderer.setSize(containerWidth, containerHeight);
-// }
 
 initialize();
 //animate();
@@ -289,11 +284,11 @@ function initialize() {
     scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
-    geometry = new THREE.IcosahedronGeometry(2, 0, 2);
-    material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
+    // geometry = new THREE.IcosahedronGeometry(2, 0, 2);
+    // material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
 
-    shape = new THREE.Mesh( geometry, material );
-    scene.add( shape );
+    // shape = new THREE.Mesh( geometry, material );
+    // scene.add( shape );
 
     //re-add this for randomly located shapes later + randomly generate color
     //Use container + function to make Object3D group, so can rotate together
@@ -306,6 +301,32 @@ function initialize() {
     //     shape.matrixAutoUpdate = false;
     //     scene.add( shape );
     // }
+
+
+
+var i = 0;
+for(var x = 0; x < 30; x += 2) {
+    var j = 0;
+    cubes[i] = new Array();
+    for(var y = 0; y < 30; y += 2) {
+        var geometry = new THREE.CubeGeometry(.5, .5, .5);
+        
+        var material = new THREE.MeshPhongMaterial({
+            //color: randomColor(),
+            color:0xd1b3e8, 
+            shading: THREE.FlatShading,
+            reflectivity: 5.5 
+        });
+        
+        cubes[i][j] = new THREE.Mesh(geometry, material);
+        cubes[i][j].position = new THREE.Vector3(x, y, 0);
+        
+        scene.add(cubes[i][j]);
+        j++;
+    }
+    i++;
+}
+
 
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
@@ -345,12 +366,31 @@ function onWindowResize() {
 }
 
 function render() {
+
+        if(typeof array === 'object' && array.length > 0) {
+        var k = 0;
+        for(var i = 0; i < cubes.length; i++) {
+            for(var j = 0; j < cubes[i].length; j++) {
+                var scale = (array[k] + boost) / 30;
+                cubes[i][j].scale.z = (scale < 1 ? 1 : scale);
+                k += (k < array.length ? 1 : 0);
+            }
+        }
+    }
     requestAnimationFrame( render );
     controls.update;
-    shape.rotation.x += 0.001;
-    shape.rotation.y += 0.001;
+    //shape.rotation.x += 0.001;
+    //shape.rotation.y += 0.001;
     //shape.rotation.z += 0.001;
     renderer.render( scene, camera );
 }
 
 
+function randomColor() {
+    var min = 64;
+    var max = 224;
+    var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;
+    var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
+    var b = (Math.floor(Math.random() * (max - min + 1)) + min);
+    return r + g + b;
+}
