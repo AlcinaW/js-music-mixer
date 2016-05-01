@@ -292,19 +292,20 @@ function initialize() {
     geometry = new THREE.IcosahedronGeometry(2, 0, 2);
     material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
 
-    //shape = new THREE.Mesh( geometry, material );
-    //scene.add( shape );
+    shape = new THREE.Mesh( geometry, material );
+    scene.add( shape );
 
     //re-add this for randomly located shapes later + randomly generate color
-    for ( var i = 0; i < 10; i ++ ) {
-    shape = new THREE.Mesh( geometry, material );
-    shape.position.x = ( Math.random() - 0.5 ) * 10;
-    shape.position.y = ( Math.random() - 0.5 ) * 10;
-    shape.position.z = ( Math.random() - 0.5 ) * 10;
-    shape.updateMatrix();
-    shape.matrixAutoUpdate = false;
-    scene.add( shape );
-  }
+    //Use container + function to make Object3D group, so can rotate together
+    // for ( var i = 0; i < 10; i ++ ) {
+    //     shape = new THREE.Mesh( geometry, material );
+    //     shape.position.x = ( Math.random() - 0.5 ) * 10;
+    //     shape.position.y = ( Math.random() - 0.5 ) * 10;
+    //     shape.position.z = ( Math.random() - 0.5 ) * 10;
+    //     shape.updateMatrix();
+    //     shape.matrixAutoUpdate = false;
+    //     scene.add( shape );
+    // }
 
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
