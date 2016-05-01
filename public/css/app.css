@@ -3,9 +3,13 @@ body, div, canvas {
     padding: 0;
 }
 body {
-	font-size: 18px
+	font-size: 18px;
+
+	background-color: #acacac;
+  	margin: 0px;
 	overflow: hidden;
 }
+
 canvas {
 	z-index: -1;
 	position: absolute;

@@ -242,6 +242,20 @@ var Colors = {
 };
 
 //START VISUALIZATION
+
+//when window resizes, animation area will shift to fit
+// window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+
+
+
 // var scene = new THREE.Scene();
 // var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
@@ -267,6 +281,8 @@ var Colors = {
 // };
 // render();
 
+
+//THREEJS scene start
 var scene, camera, renderer, geometry, material;
 
 var WIDTH  = window.innerWidth;
@@ -286,13 +302,8 @@ function initialize() {
 }
 
 function initCamera() {
-    //camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, 1, 10);
-    //camera.position.set(0, 3.5, 5);
-    //camera.lookAt(scene.position);
-
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-    //camera.position.z = 500;
     camera.position.set(0, 3.5, 5);
     controls = new THREE.OrbitControls( camera );
     controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
@@ -326,16 +337,6 @@ function render() {
     renderer.render(scene, camera);
 }
 
-window.addEventListener( 'resize', onWindowResize, false );
-
-function onWindowResize(){
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
 
 initialize();
 render();
