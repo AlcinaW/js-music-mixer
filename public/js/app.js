@@ -26,7 +26,7 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     source, 
-    fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
+    //fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
     // canvasOne = document.querySelector('.canvasOne'), 
     // ctxOne = canvasOne.getContext('2d'),
     // canvasTwo = document.querySelector('.canvasTwo'), 
@@ -247,18 +247,21 @@ function changeFilterGain(gain) {
 //START VISUALIZATION
 
 //THREEJS scene start
-var scene, camera, renderer, geometry, material, controls, container, width, height;
+var scene, camera, renderer, geometry, material, controls, container;
 
-// var width = ;
-// var height = ;
+// var width = window.innerWidth;
+// var height = window.innerHeight;
+
+var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
+var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
 
 //when window resizes, animation area will shift to fit
 window.addEventListener( 'resize', onWindowResize, false );
 function onWindowResize(){
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = containerWidth / containerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(containerWidth, containerHeight);
 }
 
 function initialize() {
@@ -267,33 +270,11 @@ function initialize() {
     initShape();
     initLights();
     initCamera();
+    initControls();
     initRenderer();
 
-    //document.body.appendChild(renderer.domElement);
-    container = document.getElementById( 'threeJSContainer' );
+    container = document.getElementById( "threeJSContainer" );
     container.appendChild( renderer.domElement );
-}
-
-
-
-function initCamera() {
-
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-    console.log(window.innerWidth);
-    console.log(window.innerHeight);
-    //camera.position.set(0, 3.5, 5);
-    camera.position.z =10;
-    controls = new THREE.OrbitControls( camera, container );
-    controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    //controls.enableZoom = false;
-}
-
-function initRenderer() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function initShape() {
@@ -316,7 +297,6 @@ function initShape() {
   //   scene.add( shape );
 
   // }
-
 }
 
 function initLights(){
@@ -331,13 +311,32 @@ function initLights(){
   light = new THREE.AmbientLight( 0x222222 );
   scene.add( light );
 }
+
+function initCamera() {
+
+    camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
+    //camera.position.set(0, 3.5, 5);
+    camera.position.z = 10;
+}
+
+function initControls(){
+    controls = new THREE.OrbitControls( camera, container );
+    controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;
+}
+
+function initRenderer() {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+    renderer.setSize(containerWidth, containerHeight);
+}
+
 function rotateShape() {
     shape.rotation.x += 0.001;
     shape.rotation.y += 0.001;
     shape.rotation.z += 0.001;
-    // shape.rotation.x -= speed * 2;
-    // shape.rotation.y -= speed;
-    // shape.rotation.z -= speed * 3;
 }
 
 function render() {
