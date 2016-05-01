@@ -3,21 +3,24 @@ body, div, canvas {
     padding: 0;
 }
 body {
-	font-size: 18px
+	font-size: 18px;
 	overflow: hidden;
 }
 
-.canvasOne, .canvasTwo {
-	border: 1px solid black;
-	height: 320px;
-	width: 1000px;
+canvas {
+    position: fixed;
+}
+#playContainer {
+	z-index: 1;
+	position: absolute;
+	width: 200px;
+	height:100%;
+	background-color: #fff;
 }
 
-
-#fullWin {
+#threeJSContainer {
+	z-index: -1;
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
-	background: linear-gradient(#91c8d1, #f0f0d5);
 }

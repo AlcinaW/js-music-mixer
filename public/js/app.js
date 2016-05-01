@@ -1,9 +1,5 @@
 //Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
 
-//Would it be better to npm the packages for ToneJS in and configure the package.json, 
-// or just CDN, or leave files as is
-
-
 //loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
 
@@ -29,11 +25,12 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
-    source, fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
-    canvasOne = document.querySelector('.canvasOne'), 
-    ctxOne = canvasOne.getContext('2d'),
-    canvasTwo = document.querySelector('.canvasTwo'), 
-    ctxTwo = canvasTwo.getContext('2d'),
+    source, 
+    //fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
+    // canvasOne = document.querySelector('.canvasOne'), 
+    // ctxOne = canvasOne.getContext('2d'),
+    // canvasTwo = document.querySelector('.canvasTwo'), 
+    // ctxTwo = canvasTwo.getContext('2d'),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -119,29 +116,8 @@ function setupSound() {
     scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
-    barVizLooper();
-    //waveVizLooper();
+    //barVizLooper();
 }
-
-function barVizLooper(){
-    window.requestAnimationFrame(barVizLooper);
-    fbcArray = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(fbcArray);
-    ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
-    ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
-    bars = 100;
-    for (var i = 0; i < bars; i++) {
-        barX = i * 3;
-        barWidth = 2;
-        barHeight = -(fbcArray[i] / 2);
-        ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
-    }
-}
-
-// function waveVizLooper(){
-//     window.requestAnimationFrame(waveVizLooper);
-
-// }
 
 // play sound and enable / disable buttons
 function playSound() {
@@ -197,7 +173,7 @@ function UI(state){
 
 
 //ADD FILTERS
-//can use onmousedown or onmousemove
+//to-do: can use onmousedown or onmousemove?
 filterType.oninput = function () {
     changeFilterType(filterType.value);
 };
@@ -256,4 +232,125 @@ function changeFilterGain(gain) {
     filterGain.innerHTML = gain + 'dB';
 }
 
+//GUI controls
+// var gui = new DAT.GUI({
+//     height : 5 * 32 - 1
+// });
+
+
+//colours
+// var colours = {
+//     red:0xf25346,
+//     blue:0x68c3c0,
+// };
+
 //START VISUALIZATION
+
+//THREEJS scene start
+var scene, camera, renderer, geometry, material, controls;
+
+// var width = window.innerWidth;
+// var height = window.innerHeight;
+
+var container = document.getElementById("threeJSContainer");
+
+var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
+var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
+
+//when window resizes, animation area will shift to fit
+// window.addEventListener( 'resize', onWindowResize, false );
+// function onWindowResize(){
+//     camera.aspect = containerWidth / containerHeight;
+//     camera.updateProjectionMatrix();
+
+//     renderer.setSize(containerWidth, containerHeight);
+// }
+
+initialize();
+//animate();
+render();
+
+function initialize() {
+
+    camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
+    //camera.position.set(0, 3.5, 5);
+    camera.position.z = 10;
+
+    controls = new THREE.OrbitControls( camera, container );
+    controls.addEventListener( 'change', render ); 
+
+    // controls.pan(new THREE.Vector3( 1, 0, 0 ));
+    // controls.pan(new THREE.Vector3( 0, 1, 0 ));
+
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;
+
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+
+    geometry = new THREE.IcosahedronGeometry(2, 0, 2);
+    material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
+
+    shape = new THREE.Mesh( geometry, material );
+    scene.add( shape );
+
+    //re-add this for randomly located shapes later + randomly generate color
+    //Use container + function to make Object3D group, so can rotate together
+    // for ( var i = 0; i < 10; i ++ ) {
+    //     shape = new THREE.Mesh( geometry, material );
+    //     shape.position.x = ( Math.random() - 0.5 ) * 10;
+    //     shape.position.y = ( Math.random() - 0.5 ) * 10;
+    //     shape.position.z = ( Math.random() - 0.5 ) * 10;
+    //     shape.updateMatrix();
+    //     shape.matrixAutoUpdate = false;
+    //     scene.add( shape );
+    // }
+
+    light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 1, 1, 1 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x002288 );
+    light.position.set( -1, -1, -1 );
+    scene.add( light );
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+    renderer = new THREE.WebGLRenderer( { alpha: true } );
+    renderer.setClearColor(0xebebeb, 1);
+    renderer.setSize( containerWidth, containerHeight );
+
+    container = document.getElementById( "threeJSContainer" );
+    container.appendChild( renderer.domElement );
+
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+}
+
+function onWindowResize() {
+
+    containerWidth = document.getElementById("threeJSContainer").offsetWidth;
+    containerHeight = document.getElementById("threeJSContainer").offsetHeight;
+
+    camera.aspect = containerWidth / containerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( containerWidth, containerHeight );
+
+    render();
+
+}
+
+function render() {
+    requestAnimationFrame( render );
+    controls.update;
+    shape.rotation.x += 0.001;
+    shape.rotation.y += 0.001;
+    //shape.rotation.z += 0.001;
+    renderer.render( scene, camera );
+}
+
+
