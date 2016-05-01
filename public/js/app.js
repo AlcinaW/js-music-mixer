@@ -256,95 +256,101 @@ var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
 var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
 
 //when window resizes, animation area will shift to fit
-window.addEventListener( 'resize', onWindowResize, false );
-function onWindowResize(){
-    camera.aspect = containerWidth / containerHeight;
-    camera.updateProjectionMatrix();
+// window.addEventListener( 'resize', onWindowResize, false );
+// function onWindowResize(){
+//     camera.aspect = containerWidth / containerHeight;
+//     camera.updateProjectionMatrix();
 
-    renderer.setSize(containerWidth, containerHeight);
-}
+//     renderer.setSize(containerWidth, containerHeight);
+// }
+
+initialize();
+animate();
+render();
 
 function initialize() {
-    scene = new THREE.Scene();
-
-    initShape();
-    initLights();
-    initCamera();
-    initControls();
-    initRenderer();
-
-    container = document.getElementById( "threeJSContainer" );
-    container.appendChild( renderer.domElement );
-}
-
-function initShape() {
-    geometry = new THREE.IcosahedronGeometry(2, 0, 2);
-    material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
-
-    shape = new THREE.Mesh( geometry, material );
-    
-    scene.add( shape );
-
-    //re-add this for randomly located shapes later + randomly generate color
-  //   for ( var i = 0; i < 10; i ++ ) {
-
-  //   shape = new THREE.Mesh( geometry, material );
-  //   shape.position.x = ( Math.random() - 0.5 ) * 10;
-  //   shape.position.y = ( Math.random() - 0.5 ) * 10;
-  //   shape.position.z = ( Math.random() - 0.5 ) * 10;
-  //   shape.updateMatrix();
-  //   shape.matrixAutoUpdate = false;
-  //   scene.add( shape );
-
-  // }
-}
-
-function initLights(){
-    light = new THREE.DirectionalLight( 0xffffff );
-  light.position.set( 1, 1, 1 );
-  scene.add( light );
-
-  light = new THREE.DirectionalLight( 0x002288 );
-  light.position.set( -1, -1, -1 );
-  scene.add( light );
-
-  light = new THREE.AmbientLight( 0x222222 );
-  scene.add( light );
-}
-
-function initCamera() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
     //camera.position.set(0, 3.5, 5);
     camera.position.z = 10;
-}
 
-function initControls(){
     controls = new THREE.OrbitControls( camera, container );
     controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = false;
+    //controls.enableDamping = true;
+    //controls.dampingFactor = 0.25;
+    //controls.enableZoom = false;
+
+    scene = new THREE.Scene();
+
+    geometry = new THREE.IcosahedronGeometry(2, 0, 2);
+    material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
+
+    shape = new THREE.Mesh( geometry, material );
+
+    shape.rotation.x += 0.01;
+    shape.rotation.y += 0.01;
+    shape.rotation.z += 0.01;
+    
+    scene.add( shape );
+
+    //re-add this for randomly located shapes later + randomly generate color
+    //for ( var i = 0; i < 10; i ++ ) {
+
+    //shape = new THREE.Mesh( geometry, material );
+    //shape.position.x = ( Math.random() - 0.5 ) * 10;
+    //shape.position.y = ( Math.random() - 0.5 ) * 10;
+    //shape.position.z = ( Math.random() - 0.5 ) * 10;
+    //shape.updateMatrix();
+    //shape.matrixAutoUpdate = false;
+    //scene.add( shape );
+  //}
+
+    light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 1, 1, 1 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x002288 );
+    light.position.set( -1, -1, -1 );
+    scene.add( light );
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+    renderer = new THREE.WebGLRenderer( { alpha: true } );
+    renderer.setClearColor(0xffffff, 0);
+    renderer.setSize( containerWidth, containerHeight );
+
+    container = document.getElementById( "threeJSContainer" );
+    container.appendChild( renderer.domElement );
+
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
 }
 
-function initRenderer() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-    renderer.setSize(containerWidth, containerHeight);
+function onWindowResize() {
+
+    containerWidth = document.getElementById("threeJSContainer").offsetWidth;
+    containerHeight = document.getElementById("threeJSContainer").offsetHeight;
+
+    camera.aspect = containerWidth / containerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( containerWidth, containerHeight );
+
+    render();
+
 }
 
-function rotateShape() {
-    shape.rotation.x += 0.001;
-    shape.rotation.y += 0.001;
-    shape.rotation.z += 0.001;
+function animate() {
+  requestAnimationFrame( animate );
+    //rotateShape();
+  controls.update();
 }
+
 
 function render() {
-    requestAnimationFrame(render);
-    rotateShape();
-    renderer.render(scene, camera);
+  renderer.render( scene, camera );
 }
 
 
-initialize();
-render();
