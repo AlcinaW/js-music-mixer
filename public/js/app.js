@@ -29,11 +29,12 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
-    source, fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
-    canvasOne = document.querySelector('.canvasOne'), 
-    ctxOne = canvasOne.getContext('2d'),
-    canvasTwo = document.querySelector('.canvasTwo'), 
-    ctxTwo = canvasTwo.getContext('2d'),
+    source, 
+    fbcArray, bars, barsX, barWidth, barHeight, bufferLength,
+    // canvasOne = document.querySelector('.canvasOne'), 
+    // ctxOne = canvasOne.getContext('2d'),
+    // canvasTwo = document.querySelector('.canvasTwo'), 
+    // ctxTwo = canvasTwo.getContext('2d'),
 
     stopButton = document.querySelector('.stop'),
     loop = true,
@@ -119,24 +120,24 @@ function setupSound() {
     scriptProcessorNode.connect(gainNode);
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
-    barVizLooper();
+    //barVizLooper();
     //waveVizLooper();
 }
 
-function barVizLooper(){
-    window.requestAnimationFrame(barVizLooper);
-    fbcArray = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(fbcArray);
-    ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
-    ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
-    bars = 100;
-    for (var i = 0; i < bars; i++) {
-        barX = i * 3;
-        barWidth = 2;
-        barHeight = -(fbcArray[i] / 2);
-        ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
-    }
-}
+// function barVizLooper(){
+//     window.requestAnimationFrame(barVizLooper);
+//     fbcArray = new Uint8Array(analyser.frequencyBinCount);
+//     analyser.getByteFrequencyData(fbcArray);
+//     ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
+//     ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
+//     bars = 100;
+//     for (var i = 0; i < bars; i++) {
+//         barX = i * 3;
+//         barWidth = 2;
+//         barHeight = -(fbcArray[i] / 2);
+//         ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
+//     }
+// }
 
 // function waveVizLooper(){
 //     window.requestAnimationFrame(waveVizLooper);
