@@ -247,10 +247,12 @@ function changeFilterGain(gain) {
 //START VISUALIZATION
 
 //THREEJS scene start
-var scene, camera, renderer, geometry, material, controls, container;
+var scene, camera, renderer, geometry, material, controls;
 
 // var width = window.innerWidth;
 // var height = window.innerHeight;
+
+var container = document.getElementById("threeJSContainer");
 
 var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
 var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
@@ -265,7 +267,7 @@ var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
 // }
 
 initialize();
-animate();
+//animate();
 render();
 
 function initialize() {
@@ -275,35 +277,34 @@ function initialize() {
     camera.position.z = 10;
 
     controls = new THREE.OrbitControls( camera, container );
-    controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-    //controls.enableDamping = true;
-    //controls.dampingFactor = 0.25;
-    //controls.enableZoom = false;
+    controls.addEventListener( 'change', render ); 
+
+    // controls.pan(new THREE.Vector3( 1, 0, 0 ));
+    // controls.pan(new THREE.Vector3( 0, 1, 0 ));
+
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;
 
     scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
     geometry = new THREE.IcosahedronGeometry(2, 0, 2);
     material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
 
-    shape = new THREE.Mesh( geometry, material );
-
-    shape.rotation.x += 0.01;
-    shape.rotation.y += 0.01;
-    shape.rotation.z += 0.01;
-    
-    scene.add( shape );
+    //shape = new THREE.Mesh( geometry, material );
+    //scene.add( shape );
 
     //re-add this for randomly located shapes later + randomly generate color
-    //for ( var i = 0; i < 10; i ++ ) {
-
-    //shape = new THREE.Mesh( geometry, material );
-    //shape.position.x = ( Math.random() - 0.5 ) * 10;
-    //shape.position.y = ( Math.random() - 0.5 ) * 10;
-    //shape.position.z = ( Math.random() - 0.5 ) * 10;
-    //shape.updateMatrix();
-    //shape.matrixAutoUpdate = false;
-    //scene.add( shape );
-  //}
+    for ( var i = 0; i < 10; i ++ ) {
+    shape = new THREE.Mesh( geometry, material );
+    shape.position.x = ( Math.random() - 0.5 ) * 10;
+    shape.position.y = ( Math.random() - 0.5 ) * 10;
+    shape.position.z = ( Math.random() - 0.5 ) * 10;
+    shape.updateMatrix();
+    shape.matrixAutoUpdate = false;
+    scene.add( shape );
+  }
 
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
@@ -317,7 +318,7 @@ function initialize() {
     scene.add( light );
 
     renderer = new THREE.WebGLRenderer( { alpha: true } );
-    renderer.setClearColor(0xffffff, 0);
+    renderer.setClearColor(0xebebeb, 1);
     renderer.setSize( containerWidth, containerHeight );
 
     container = document.getElementById( "threeJSContainer" );
@@ -342,15 +343,13 @@ function onWindowResize() {
 
 }
 
-function animate() {
-  requestAnimationFrame( animate );
-    //rotateShape();
-  controls.update();
-}
-
-
 function render() {
-  renderer.render( scene, camera );
+    requestAnimationFrame( render );
+    controls.update;
+    shape.rotation.x += 0.001;
+    shape.rotation.y += 0.001;
+    //shape.rotation.z += 0.001;
+    renderer.render( scene, camera );
 }
 
 

@@ -7,6 +7,9 @@ body {
 	overflow: hidden;
 }
 
+canvas {
+    position: fixed;
+}
 #playContainer {
 	z-index: 1;
 	position: absolute;
