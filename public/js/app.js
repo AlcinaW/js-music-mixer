@@ -1,9 +1,5 @@
 //Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
 
-//Would it be better to npm the packages for ToneJS in and configure the package.json, 
-// or just CDN, or leave files as is
-
-
 //loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
 
@@ -177,7 +173,7 @@ function UI(state){
 
 
 //ADD FILTERS
-//can use onmousedown or onmousemove
+//to-do: can use onmousedown or onmousemove?
 filterType.oninput = function () {
     changeFilterType(filterType.value);
 };
@@ -236,16 +232,16 @@ function changeFilterGain(gain) {
     filterGain.innerHTML = gain + 'dB';
 }
 
-var Colors = {
-    red:0xf25346,
-    blue:0x68c3c0,
-};
+//colours
+// var colours = {
+//     red:0xf25346,
+//     blue:0x68c3c0,
+// };
 
 //START VISUALIZATION
 
 //when window resizes, animation area will shift to fit
 // window.addEventListener( 'resize', onWindowResize, false );
-
 function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -285,50 +281,81 @@ function onWindowResize(){
 //THREEJS scene start
 var scene, camera, renderer, geometry, material;
 
-var WIDTH  = window.innerWidth;
-var HEIGHT = window.innerHeight;
-
-var SPEED = 0.01;
+//var speed = 0.01;
 
 function initialize() {
     scene = new THREE.Scene();
 
     initShape();
-    //initControl();
+    initLights();
     initCamera();
     initRenderer();
 
-    document.body.appendChild(renderer.domElement);
+    //document.body.appendChild(renderer.domElement);
+    container = document.getElementById( 'threeJSContainer' );
+    container.appendChild( renderer.domElement );
 }
 
 function initCamera() {
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-    camera.position.set(0, 3.5, 5);
+    //camera.position.set(0, 3.5, 5);
+    camera.position.z =10;
     controls = new THREE.OrbitControls( camera );
     controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
-    controls.enableZoom = false;
+    //controls.enableZoom = false;
 }
 
 function initRenderer() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function initShape() {
     geometry = new THREE.IcosahedronGeometry(2, 0, 2);
-    material = new THREE.MeshNormalMaterial();
+    material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
 
     shape = new THREE.Mesh( geometry, material );
-    scene.add(shape);
+    
+    scene.add( shape );
+
+    //re-add this for randomly located shapes later + randomly generate color
+  //   for ( var i = 0; i < 10; i ++ ) {
+
+  //   shape = new THREE.Mesh( geometry, material );
+  //   shape.position.x = ( Math.random() - 0.5 ) * 10;
+  //   shape.position.y = ( Math.random() - 0.5 ) * 10;
+  //   shape.position.z = ( Math.random() - 0.5 ) * 10;
+  //   shape.updateMatrix();
+  //   shape.matrixAutoUpdate = false;
+  //   scene.add( shape );
+
+  // }
+
 }
 
+function initLights(){
+    light = new THREE.DirectionalLight( 0xffffff );
+  light.position.set( 1, 1, 1 );
+  scene.add( light );
+
+  light = new THREE.DirectionalLight( 0x002288 );
+  light.position.set( -1, -1, -1 );
+  scene.add( light );
+
+  light = new THREE.AmbientLight( 0x222222 );
+  scene.add( light );
+}
 function rotateShape() {
-    shape.rotation.x -= SPEED * 2;
-    shape.rotation.y -= SPEED;
-    shape.rotation.z -= SPEED * 3;
+    shape.rotation.x += 0.001;
+    shape.rotation.y += 0.001;
+    shape.rotation.z += 0.001;
+    // shape.rotation.x -= speed * 2;
+    // shape.rotation.y -= speed;
+    // shape.rotation.z -= speed * 3;
 }
 
 function render() {
