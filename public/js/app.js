@@ -121,28 +121,7 @@ function setupSound() {
     // Connect the gain node to the destination
     gainNode.connect(audioContext.destination);
     //barVizLooper();
-    //waveVizLooper();
 }
-
-// function barVizLooper(){
-//     window.requestAnimationFrame(barVizLooper);
-//     fbcArray = new Uint8Array(analyser.frequencyBinCount);
-//     analyser.getByteFrequencyData(fbcArray);
-//     ctxOne.clearRect(0, 0, canvasOne.width, canvasOne.height); // Clear canvas
-//     ctxOne.fillStyle = '#5a0d5f'; // Color of the bars
-//     bars = 100;
-//     for (var i = 0; i < bars; i++) {
-//         barX = i * 3;
-//         barWidth = 2;
-//         barHeight = -(fbcArray[i] / 2);
-//         ctxOne.fillRect(barX, canvasOne.height, barWidth, barHeight);
-//     }
-// }
-
-// function waveVizLooper(){
-//     window.requestAnimationFrame(waveVizLooper);
-
-// }
 
 // play sound and enable / disable buttons
 function playSound() {
@@ -259,10 +238,6 @@ function changeFilterGain(gain) {
 
 var Colors = {
     red:0xf25346,
-    white:0xd8d0d1,
-    brown:0x59332e,
-    pink:0xF5986E,
-    brownDark:0x23190f,
     blue:0x68c3c0,
 };
 
@@ -303,6 +278,7 @@ function initialize() {
     scene = new THREE.Scene();
 
     initShape();
+    //initControl();
     initCamera();
     initRenderer();
 
@@ -310,9 +286,19 @@ function initialize() {
 }
 
 function initCamera() {
-    camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, 1, 10);
+    //camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, 1, 10);
+    //camera.position.set(0, 3.5, 5);
+    //camera.lookAt(scene.position);
+
+
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+    //camera.position.z = 500;
     camera.position.set(0, 3.5, 5);
-    camera.lookAt(scene.position);
+    controls = new THREE.OrbitControls( camera );
+    controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = false;
 }
 
 function initRenderer() {
