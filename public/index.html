@@ -3,41 +3,42 @@
 <head>
 	<title>JS Music Mixer Project</title>
 
-	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 	<div id="playContainer">
 		<div class="playControls">
 			<h1>Amuse</h1>
+			<h2>JavaScript Music Mixer Project</h2>
 		    <button class="play" disabled>Loading...</button>
 		    <button class="stop" disabled>Stop</button>
 		</div>
 		<div class="audioControls">
-			    <label for="gainValue">Gain/volume <span class='gain'>1</span>
+			    <label for="gainValue">Gain/volume: <span class='gain'>1</span>
 					<input class='gainSlider' name='gainValue' type='range' min='0' max='1' step='.01' value='1' disabled />
 				</label>
 			<br>
-			    <label for='playbackRate'>Playback rate <span class='rate'>1</span>
+			    <label for='playbackRate'>Playback rate: <span class='rate'>1</span>
 			        <input class='playbackSlider' name='playbackRate' type='range' min='0' max='10' step='0.05' value='1' disabled />
 			    </label>
 
 			<br>
 
 			<div class="filterControls">
-			    <label for='filterFreq'>Filter frequency <span class='freq'>2500Hz</span>
+			    <label for='filterFreq'>Filter frequency: <span class='freq'>2500Hz</span>
 
 			        <input class='filterSlider' name='filterFreq' type='range' min='0' max='20000' step='10' value='2500' disabled />
 			    </label>
 
 			    <br>
 
-			    <label>Quality (Q) value <span class='filterQValue'>1</span> 
+			    <label>Quality (Q) value: <span class='filterQValue'>1</span> 
 			        <input class="filterQSlider" type="range" min=".0001" max="10" step=".0005" value="1" disabled/>
 			    </label>
 
 			    <br>
 
-			    <label>Filter gain value <span class='filterGainValue'>0</span> 
+			    <label>Filter gain value: <span class='filterGainValue'>0</span> 
 			        <input class="filterGainSlider" type="range" min="-40" max="40" step="1" value="0" disabled/>
 			    </label>
 
@@ -61,12 +62,9 @@
 	<!-- CONTAINER FOR THREEJS -->
 	<div id="threeJSContainer"></div>  
 
-	<!-- DAT GUI for ThreeJS interaction -->
-	<script type="text/javascript" src="js/dat.gui.js"></script>
 	<!-- ThreeJS -->
 	<script type="text/javascript" src="js/three.js"></script>
 	<script type="text/javascript" src="js/OrbitControls.js"></script>
-	<script type="text/javascript" src="js/TrackballControls.js"></script>
 	<!-- Main JS -->
 	<script type="text/javascript" src="js/app.js"></script>
 </body>

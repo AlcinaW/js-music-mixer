@@ -3,12 +3,29 @@ body, div, canvas {
     padding: 0;
 }
 body {
-	font-size: 18px;
 	overflow: hidden;
 }
-
+body, button, select {
+	font-family: Georgia, serif;
+	font-size: 12pt;
+		color: #474747;
+}
+h1 {
+	font-size: 25px;
+	font-weight: bold;
+}
+h2 {
+	font-size: 18px;
+	font-weight: normal;
+}
+button {
+	margin-bottom: 15px;
+}
 canvas {
     position: fixed;
+}
+input {
+	width: 170px;
 }
 #playContainer {
 	z-index: 1;
@@ -16,6 +33,7 @@ canvas {
 	width: 200px;
 	height:100%;
 	background-color: #fff;
+	padding-left: 15px;
 }
 
 #threeJSContainer {

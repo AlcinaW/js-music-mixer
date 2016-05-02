@@ -240,11 +240,6 @@ function changeFilterGain(gain) {
     filterGain.innerHTML = gain + 'dB';
 }
 
-//GUI controls
-// var gui = new DAT.GUI({
-//     height : 5 * 32 - 1
-// });
-
 //START VISUALIZATION
 
 //THREEJS scene start
