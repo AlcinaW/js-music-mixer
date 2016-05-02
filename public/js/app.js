@@ -2,12 +2,7 @@
 
 //loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
-
-// initializing a new context
-//To-do: use below two var to create visualization (MDN example link version)
-
-
-// LOADING AUDIO ONLY
+//to-do: single or double quotes? Decide!
 
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 //new AudioContext object instance
@@ -52,6 +47,7 @@ function init() {
     loadSound(sampleURL);
 }
 
+//UI CONTROL FUNCTIONS
 playButton.onclick = function () {
     playSound();
 };
@@ -96,36 +92,25 @@ function setupSound() {
     sound.playbackRate.value = playbackSlider.value;
 
     analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
-    analyser.fftSize = 2048, //analyser.fftSize = 1024,
+    analyser.fftSize = 2048, 
     analyser.minDecibels = -90,
     analyser.maxDecibels = -10,
 
     sound.connect(filter); //can connect more than one to a node?
     
-    // Connect the source to the gain node.
+    // Connect source/sound var to the gain node
     filter.connect(gainNode);
     filter.connect(analyser);
     analyser.connect(scriptProcessorNode);
     scriptProcessorNode.connect(gainNode);
-    // Connect the gain node to the destination
+    // Connect gain node to the destination
     gainNode.connect(audioContext.destination);
     
     bufferLength = analyser.frequencyBinCount;
-    // scriptProcessorNode.onaudioprocess = function(audioProcessingEvent) {
 
-    // array = new Uint8Array(analyser.frequencyBinCount);
-    // analyser.getByteFrequencyData(array);
-    // boost = 0;
-    // for (var i = 0; i < array.length; i++) {
-    //     boost += array[i];
-    // }
-    //     boost = boost / array.length;
-    //     }
-
-        //this is where we animates the bars
+    //animate the bars
     scriptProcessorNode.onaudioprocess = function (audioProcessingEvent) {
 
-        // get the average for the first channel
         array = new Uint8Array(bufferLength);
         analyser.getByteFrequencyData(array);
 
@@ -147,6 +132,7 @@ function setupSound() {
 
 }
 
+//MORE UI CONTROLS (move to other section?)
 // play sound and enable / disable buttons
 function playSound() {
     setupSound();
@@ -159,7 +145,6 @@ function playSound() {
 // stop sound and enable / disable buttons
 function stopSound() {
     UI('stop');
-    //sound.disconnect(scriptProcessorNode); //disconnect when stopped
     sound.stop(0);
 }
 
@@ -186,7 +171,7 @@ function UI(state){
             playbackSlider.disabled = false;
             filterFreqSlider.disabled = false;
             filterQSlider.disabled = false;
-            filterGainSlider.disabled = false;
+            filterGainSlider.disabled = false; //keep this? 
             break;
         case 'stop':
             playButton.disabled = false;
@@ -200,9 +185,7 @@ function UI(state){
     }
 }
 
-
 //ADD FILTERS
-//to-do: can use onmousedown or onmousemove?
 filterType.oninput = function () {
     changeFilterType(filterType.value);
 };
@@ -265,15 +248,11 @@ function changeFilterGain(gain) {
 
 //THREEJS scene start
 var scene, camera, renderer, geometry, material, controls;
-//var cubes = new Array();
-//console.log(cubes);
 var bars = new Array();
+
 console.log(bars);
 var numberOfBars = 16;
 var boost = 0;
-
-// var width = window.innerWidth;
-// var height = window.innerHeight;
 
 var container = document.getElementById("threeJSContainer");
 
@@ -281,7 +260,6 @@ var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
 var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
 
 initialize();
-//animate();
 render();
 
 function initialize() {
@@ -344,30 +322,7 @@ function initialize() {
         console.log(bars[i]);
     }
 
-// var i = 0;
-// for(var x = 0; x < 30; x += 2) {
-//     var j = 0;
-//     cubes[i] = new Array();
-//     for(var y = 0; y < 30; y += 2) {
-//         var geometry = new THREE.CubeGeometry(.5, .5, .5);
-        
-//         var material = new THREE.MeshPhongMaterial({
-//             //color: randomColor(),
-//             color:0xd1b3e8, 
-//             shading: THREE.FlatShading,
-//             reflectivity: 5.5 
-//         });
-        
-//         cubes[i][j] = new THREE.Mesh(geometry, material);
-//         cubes[i][j].position = new THREE.Vector3(x, y, 0);
-        
-//         scene.add(cubes[i][j]);
-//         j++;
-//     }
-
-//     i++;
-// }
-
+    //to-do: change lighting? kinda harsh atm
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
     scene.add( light );
@@ -386,7 +341,6 @@ function initialize() {
     container = document.getElementById( "threeJSContainer" );
     container.appendChild( renderer.domElement );
 
-
     window.addEventListener( 'resize', onWindowResize, false );
 
 }
@@ -402,24 +356,11 @@ function onWindowResize() {
     renderer.setSize( containerWidth, containerHeight );
 
     render();
-
 }
 
 function render() {
 
-//     if(typeof array === 'object' && array.length > 0) {
-//     var k = 0;
-//     for(var i = 0; i < cubes.length; i++) {
-//         for(var j = 0; j < cubes[i].length; j++) {
-//             var scale = (array[k] + boost) / 30;
-//             cubes[i][j].scale.z = (scale < 1 ? 1 : scale);
-//             k += (k < array.length ? 1 : 0);
-//         }
-//     }
-// }
-
-
-
+    //to-do: double-check this part, maybe rewrite
     if(typeof array === 'object' && array.length > 0) {
     var k = 0;
     for(var i = 0; i < bars.length; i++) {
@@ -433,12 +374,12 @@ function render() {
 
     requestAnimationFrame( render );
     controls.update;
+    //to-do: spin the camera slowly around object, but can still use mouse input?
     //shape.rotation.x += 0.001;
     //shape.rotation.y += 0.001;
     //shape.rotation.z += 0.001;
     renderer.render( scene, camera );
 }
-
 
 function randomColor() {
     var min = 64;
