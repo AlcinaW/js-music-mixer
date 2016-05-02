@@ -122,11 +122,11 @@ function setupSound() {
 
         var step = Math.round(array.length / numberOfBars);
 
-        //Iterate through the bars and scale the z axis
+        //Iterate through bars and scale the y axis
         for (var i = 0; i < numberOfBars; i++) {
             var value = array[i * step] / 4;
             value = value < 1 ? 1 : value;
-            bars[i].scale.z = value;
+            bars[i].scale.y = value;
         }
     }
 
