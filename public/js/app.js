@@ -245,6 +245,7 @@ function changeFilterGain(gain) {
 //THREEJS scene start
 var scene, camera, renderer, geometry, material, controls;
 var cubes = new Array();
+console.log(cubes);
 var numberOfBars = 60;
 var boost = 0;
 
@@ -263,7 +264,7 @@ render();
 function initialize() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
-    //camera.position.set(0, 3.5, 5);
+    //camera.position.set(0, 3.5, 0);
     camera.position.z = 10;
 
     controls = new THREE.OrbitControls( camera, container );
@@ -319,8 +320,27 @@ for(var x = 0; x < 30; x += 2) {
         scene.add(cubes[i][j]);
         j++;
     }
+    
     i++;
 }
+
+
+
+        // var geometry = new THREE.CubeGeometry(.5, .5, .5);
+        
+        // var material = new THREE.MeshPhongMaterial({
+        //     //color: randomColor(),
+        //     color:0xd1b3e8, 
+        //     shading: THREE.FlatShading,
+        //     reflectivity: 5.5 
+        // });
+
+        // var mesh = new THREE.Mesh (geometry, material);
+        // mesh.position.x = .25;
+        // scene.add(mesh);
+        //         var mesh = new THREE.Mesh (geometry, material);
+        // mesh.position.x = -1;
+        // scene.add(mesh);
 
 
     light = new THREE.DirectionalLight( 0xffffff );
