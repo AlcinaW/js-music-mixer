@@ -251,7 +251,7 @@ var scene, camera, renderer, geometry, material, controls;
 var bars = new Array();
 
 console.log(bars);
-var numberOfBars = 16;
+var numberOfBars = 30;
 var boost = 0;
 
 var container = document.getElementById("threeJSContainer");
@@ -266,7 +266,7 @@ function initialize() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
     //camera.position.set(0, 3.5, 0);
-    camera.position.z = 10;
+    camera.position.z = 15;
 
     controls = new THREE.OrbitControls( camera, container );
     controls.addEventListener( 'change', render ); 
