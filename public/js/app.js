@@ -8,9 +8,7 @@
 
 
 // LOADING AUDIO ONLY
-//var analyser;
 
-//var sampleBuffer;
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 //new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
@@ -113,16 +111,39 @@ function setupSound() {
     gainNode.connect(audioContext.destination);
     
     bufferLength = analyser.frequencyBinCount;
-    scriptProcessorNode.onaudioprocess = function(audioProcessingEvent) {
+    // scriptProcessorNode.onaudioprocess = function(audioProcessingEvent) {
 
-    array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(array);
-    boost = 0;
-    for (var i = 0; i < array.length; i++) {
-        boost += array[i];
-    }
-        boost = boost / array.length;
+    // array = new Uint8Array(analyser.frequencyBinCount);
+    // analyser.getByteFrequencyData(array);
+    // boost = 0;
+    // for (var i = 0; i < array.length; i++) {
+    //     boost += array[i];
+    // }
+    //     boost = boost / array.length;
+    //     }
+
+        //this is where we animates the bars
+    scriptProcessorNode.onaudioprocess = function (audioProcessingEvent) {
+
+        // get the average for the first channel
+        array = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(array);
+
+        boost = 0;
+        for (var i = 0; i < array.length; i++) {
+            boost += array[i];
         }
+        boost = boost / array.length;
+
+        var step = Math.round(array.length / numberOfBars);
+
+        //Iterate through the bars and scale the z axis
+        for (var i = 0; i < numberOfBars; i++) {
+            var value = array[i * step] / 4;
+            value = value < 1 ? 1 : value;
+            bars[i].scale.z = value;
+        }
+    }
 
 }
 
@@ -244,9 +265,11 @@ function changeFilterGain(gain) {
 
 //THREEJS scene start
 var scene, camera, renderer, geometry, material, controls;
-var cubes = new Array();
-console.log(cubes);
-var numberOfBars = 60;
+//var cubes = new Array();
+//console.log(cubes);
+var bars = new Array();
+console.log(bars);
+var numberOfBars = 16;
 var boost = 0;
 
 // var width = window.innerWidth;
@@ -298,50 +321,52 @@ function initialize() {
     //     scene.add( shape );
     // }
 
+    //loop and reate bars
+    for (var i = 0; i < this.numberOfBars; i++) {
 
+        //create a bar
+        var barGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 
-var i = 0;
-for(var x = 0; x < 30; x += 2) {
-    var j = 0;
-    cubes[i] = new Array();
-    for(var y = 0; y < 30; y += 2) {
-        var geometry = new THREE.CubeGeometry(.5, .5, .5);
-        
+        //create a material
         var material = new THREE.MeshPhongMaterial({
-            //color: randomColor(),
-            color:0xd1b3e8, 
+            //color:0xd1b3e8, 
+            color: randomColor(),
             shading: THREE.FlatShading,
             reflectivity: 5.5 
         });
-        
-        cubes[i][j] = new THREE.Mesh(geometry, material);
-        cubes[i][j].position = new THREE.Vector3(x, y, 0);
-        
-        scene.add(cubes[i][j]);
-        j++;
+
+        //create the geometry and set the initial position
+        bars[i] = new THREE.Mesh(barGeometry, material);
+        bars[i].position.set(i - numberOfBars/2, 0, 0);
+
+        //add the created bar to the scene
+        scene.add(bars[i]);
+        console.log(bars[i]);
     }
-    
-    i++;
-}
 
-
-
-        // var geometry = new THREE.CubeGeometry(.5, .5, .5);
+// var i = 0;
+// for(var x = 0; x < 30; x += 2) {
+//     var j = 0;
+//     cubes[i] = new Array();
+//     for(var y = 0; y < 30; y += 2) {
+//         var geometry = new THREE.CubeGeometry(.5, .5, .5);
         
-        // var material = new THREE.MeshPhongMaterial({
-        //     //color: randomColor(),
-        //     color:0xd1b3e8, 
-        //     shading: THREE.FlatShading,
-        //     reflectivity: 5.5 
-        // });
+//         var material = new THREE.MeshPhongMaterial({
+//             //color: randomColor(),
+//             color:0xd1b3e8, 
+//             shading: THREE.FlatShading,
+//             reflectivity: 5.5 
+//         });
+        
+//         cubes[i][j] = new THREE.Mesh(geometry, material);
+//         cubes[i][j].position = new THREE.Vector3(x, y, 0);
+        
+//         scene.add(cubes[i][j]);
+//         j++;
+//     }
 
-        // var mesh = new THREE.Mesh (geometry, material);
-        // mesh.position.x = .25;
-        // scene.add(mesh);
-        //         var mesh = new THREE.Mesh (geometry, material);
-        // mesh.position.x = -1;
-        // scene.add(mesh);
-
+//     i++;
+// }
 
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
@@ -382,16 +407,30 @@ function onWindowResize() {
 
 function render() {
 
-        if(typeof array === 'object' && array.length > 0) {
-        var k = 0;
-        for(var i = 0; i < cubes.length; i++) {
-            for(var j = 0; j < cubes[i].length; j++) {
-                var scale = (array[k] + boost) / 30;
-                cubes[i][j].scale.z = (scale < 1 ? 1 : scale);
-                k += (k < array.length ? 1 : 0);
-            }
+//     if(typeof array === 'object' && array.length > 0) {
+//     var k = 0;
+//     for(var i = 0; i < cubes.length; i++) {
+//         for(var j = 0; j < cubes[i].length; j++) {
+//             var scale = (array[k] + boost) / 30;
+//             cubes[i][j].scale.z = (scale < 1 ? 1 : scale);
+//             k += (k < array.length ? 1 : 0);
+//         }
+//     }
+// }
+
+
+
+    if(typeof array === 'object' && array.length > 0) {
+    var k = 0;
+    for(var i = 0; i < bars.length; i++) {
+        for(var j = 0; j < bars[i].length; j++) {
+            var scale = (array[k] + boost) / 30;
+            bars[i][j].scale.z = (scale < 1 ? 1 : scale);
+            k += (k < array.length ? 1 : 0);
         }
     }
+}
+
     requestAnimationFrame( render );
     controls.update;
     //shape.rotation.x += 0.001;
