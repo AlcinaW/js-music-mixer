@@ -1,4 +1,4 @@
-//Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
+//Note: run with python -m SimpleHTTPServer to test, not from file, or else won"t work
 
 //loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
@@ -9,8 +9,8 @@
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
 
-    sampleURL = '../media/Every_Step.mp3',
-    sampleBuffer, sound, playButton = document.querySelector('.play'),
+    sampleURL = "../media/Every_Step.mp3",
+    sampleBuffer, sound, playButton = document.querySelector(".play"),
 
     // gain node = volume out of 1
     gainNode = audioContext.createGain(),
@@ -18,32 +18,40 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
-    source, 
+    //source, 
     bufferLength,
 
-    stopButton = document.querySelector('.stop'),
+    stopButton = document.querySelector(".stop"),
     loop = true,
-    playbackSlider = document.querySelector('.playbackSlider'),
-    playbackRate = document.querySelector('.rate'),
+    playbackSlider = document.querySelector(".playbackSlider"),
+    playbackRate = document.querySelector(".rate"),
 
-    filterType = document.querySelector('.filterType'),
-    filterFreq = document.querySelector('.freq'),
-    filterFreqSlider = document.querySelector('.filterSlider'),
+    filterType = document.querySelector(".filterType"),
+    filterFreq = document.querySelector(".freq"),
+    filterFreqSlider = document.querySelector(".filterSlider"),
 
-    filterQ = document.querySelector('.filterQValue'),
-    filterQSlider = document.querySelector('.filterQSlider'),
+    filterQ = document.querySelector(".filterQValue"),
+    filterQSlider = document.querySelector(".filterQSlider"),
 
-    filterGain = document.querySelector('.filterGainValue'),
-    filterGainSlider = document.querySelector('.filterGainSlider'),
+    filterGain = document.querySelector(".filterGainValue"),
+    filterGainSlider = document.querySelector(".filterGainSlider"),
     
-    gainValue = document.querySelector('.gain'), //for the volume
-
-    gainSlider = document.querySelector('.gainSlider');   
+    gainValue = document.querySelector(".gain"), 
+    gainSlider = document.querySelector(".gainSlider");   
 
 // load sound
 init();
 
 function init() {
+        //test if browser supports web audio api
+        try {
+        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+        console.log("Gotta catch all the errors! Gotta catch 'em all, gotta catch 'em all!");
+        }
+            catch(error) {
+            alert("Web Audio API is not supported in this browser.");
+            console.log("Error: " + error);
+        }
     loadSound(sampleURL);
 }
 
@@ -67,15 +75,15 @@ gainSlider.oninput = function () {
 // function to load sounds via AJAX
 function loadSound(url) {
     var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
 
     request.onload = function () {
         audioContext.decodeAudioData(request.response, function (buffer) {
             var soundLength = buffer.duration;
             sampleBuffer = buffer;
             playButton.disabled = false;
-            playButton.innerHTML = 'Play';
+            playButton.innerHTML = "Play";
         });
     };
 
@@ -84,7 +92,7 @@ function loadSound(url) {
 
 // set our sound buffer, loop, and connect to destination
 // connect each node to each other in a chain, and then connect to audioContext.destination
-// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
+// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn"t much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -120,10 +128,10 @@ function setupSound() {
         }
         boost = boost / array.length;
 
-        var step = Math.round(array.length / numberOfBars);
+        var step = Math.round(array.length / numBars);
 
         //Iterate through bars and scale the y axis
-        for (var i = 0; i < numberOfBars; i++) {
+        for (var i = 0; i < numBars; i++) {
             var value = array[i * step] / 4;
             value = value < 1 ? 1 : value;
             bars[i].scale.y = value;
@@ -136,15 +144,15 @@ function setupSound() {
 // play sound and enable / disable buttons
 function playSound() {
     setupSound();
-    UI('play');
+    UI("play");
     sound.start(0);
     sound.onended = function () {
-        UI('stop');
+        UI("stop");
     }
 }
 // stop sound and enable / disable buttons
 function stopSound() {
-    UI('stop');
+    UI("stop");
     sound.stop(0);
 }
 
@@ -164,16 +172,16 @@ function changeGain(gain) {
 
 function UI(state){
     switch(state){
-        case 'play':
+        case "play":
             playButton.disabled = true;
             stopButton.disabled = false;
             gainSlider.disabled = false; //volume
             playbackSlider.disabled = false;
             filterFreqSlider.disabled = false;
             filterQSlider.disabled = false;
-            filterGainSlider.disabled = false; //keep this? 
+            filterGainSlider.disabled = false; 
             break;
-        case 'stop':
+        case "stop":
             playButton.disabled = false;
             stopButton.disabled = true;
             gainSlider.disabled = true;
@@ -206,22 +214,22 @@ filterGainSlider.oninput = function () {
 function changeFilterType(type) {
     filter.type = type;
     switch (type) {
-        case 'peaking':
+        case "peaking":
             filterQSlider.disabled = false;
             filterGainSlider.disabled = false;
             break;
-        case 'lowpass':
-        case 'highpass':
-        case 'bandpass':
-        case 'notch':
-        case 'allpass':
+        case "lowpass":
+        case "highpass":
+        case "bandpass":
+        case "notch":
+        case "allpass":
+            filterQSlider.disabled = false;
             filterGainSlider.disabled = true;
-            filterQSlider.disabled = false;
             break;
-        case 'lowshelf':
-        case 'highshelf':
-            filterGainSlider.disabled = false;
+        case "lowshelf":
+        case "highshelf":
             filterQSlider.disabled = true;
+            filterGainSlider.disabled = false;
             break;
     }
 }
@@ -229,7 +237,7 @@ function changeFilterType(type) {
 // change filter frequency and update display 
 function changeFilterFreq(freq) {
     filter.frequency.value = freq;
-    filterFreq.innerHTML = freq + 'Hz';
+    filterFreq.innerHTML = freq + "Hz";
 }
 
 // change filter Q and update display
@@ -241,7 +249,7 @@ function changeFilterQ(Q) {
 // change filter Gain and update display
 function changeFilterGain(gain) {
     filter.gain.value = gain;
-    filterGain.innerHTML = gain + 'dB';
+    filterGain.innerHTML = gain + "dB";
 }
 
 //START VISUALIZATION
@@ -250,8 +258,7 @@ function changeFilterGain(gain) {
 var scene, camera, renderer, geometry, material, controls;
 var bars = new Array();
 
-console.log(bars);
-var numberOfBars = 30;
+var numBars = 20;
 var boost = 0;
 
 var container = document.getElementById("threeJSContainer");
@@ -265,11 +272,11 @@ render();
 function initialize() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
-    //camera.position.set(0, 3.5, 0);
-    camera.position.z = 15;
+    camera.position.set(3,3, 2);
+    camera.position.z = 10;
 
     controls = new THREE.OrbitControls( camera, container );
-    controls.addEventListener( 'change', render ); 
+    controls.addEventListener( "change", render ); 
 
     // controls.pan(new THREE.Vector3( 1, 0, 0 ));
     // controls.pan(new THREE.Vector3( 0, 1, 0 ));
@@ -300,7 +307,7 @@ function initialize() {
     // }
 
     //loop and reate bars
-    for (var i = 0; i < this.numberOfBars; i++) {
+    for (var i = 0; i < this.numBars; i++) {
 
         //create a bar
         var barGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
@@ -315,11 +322,10 @@ function initialize() {
 
         //create the geometry and set the initial position
         bars[i] = new THREE.Mesh(barGeometry, material);
-        bars[i].position.set(i - numberOfBars/2, 0, 0);
+        bars[i].position.set(i - numBars/2, 0, 0);
 
         //add the created bar to the scene
         scene.add(bars[i]);
-        console.log(bars[i]);
     }
 
     //to-do: change lighting? kinda harsh atm
@@ -334,14 +340,14 @@ function initialize() {
     light = new THREE.AmbientLight( 0x222222 );
     scene.add( light );
 
-    renderer = new THREE.WebGLRenderer( { alpha: true } );
+    renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
     renderer.setClearColor(0xebebeb, 1);
     renderer.setSize( containerWidth, containerHeight );
 
     container = document.getElementById( "threeJSContainer" );
     container.appendChild( renderer.domElement );
 
-    window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( "resize", onWindowResize, false );
 
 }
 
@@ -361,7 +367,7 @@ function onWindowResize() {
 function render() {
 
     //to-do: double-check this part, maybe rewrite
-    if(typeof array === 'object' && array.length > 0) {
+    if(typeof array === "object" && array.length > 0) {
     var k = 0;
     for(var i = 0; i < bars.length; i++) {
         for(var j = 0; j < bars[i].length; j++) {
