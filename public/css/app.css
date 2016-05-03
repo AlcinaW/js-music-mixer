@@ -8,7 +8,7 @@ body {
 body, button, select {
 	font-family: Georgia, serif;
 	font-size: 12pt;
-		color: #474747;
+	color: #474747;
 }
 h1 {
 	font-size: 25px;
@@ -24,9 +24,6 @@ button {
 }
 canvas {
     position: fixed;
-}
-input {
-	width: 170px;
 }
 a {
 	text-decoration: none;
@@ -53,11 +50,16 @@ a:hover, a:focus, a:active {
 	left: 1;
 	bottom: 0;
 }
+input {
+	width: 170px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
 input[type=range]{
     -webkit-appearance: none;
 }
 input[type=range]::-webkit-slider-runnable-track {
-    width: 300px;
+    width: 170px;
     height: 5px;
     background: #ddd;
     border: none;
@@ -66,8 +68,8 @@ input[type=range]::-webkit-slider-runnable-track {
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
-    height: 16px;
-    width: 16px;
+    height: 17px;
+    width: 17px;
     border-radius: 50%;
     background: #9986a2;
     margin-top: -4px;
