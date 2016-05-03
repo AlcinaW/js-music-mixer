@@ -15,7 +15,7 @@
 		    <button class="stop" disabled>Stop</button>
 		</div>
 		<div class="audioControls">
-			    <label for="gainValue">Gain/volume: <span class="gain">1</span>
+			    <label for="gainValue">Volume: <span class="gain">1</span>
 					<input class="gainSlider" name="gainValue" type="range" min="0" max="1" step=".01" value="1" disabled />
 				</label>
 			<br>
@@ -23,12 +23,14 @@
 			    	<!-- some browers don't allow playback rate under .4 or under -->
 			        <input class="playbackSlider" name="playbackRate" type="range" min=".1" max="10" step="0.05" value="1" disabled />
 			    </label>
-
+			<br>
+			    <label for="panValue">Stereo panning: <span class="pan">0</span>
+			        <input class="panSlider" name="panValue" type="range" min="-1" max="1" step="0.01" value="0" disabled />
+			    </label>
 			<br>
 
 			<div class="filterControls">
 			    <label for="filterFreq">Filter frequency: <span class="freq">2500Hz</span>
-
 			        <input class="filterSlider" name="filterFreq" type="range" min="0" max="20000" step="10" value="2500" disabled />
 			    </label>
 

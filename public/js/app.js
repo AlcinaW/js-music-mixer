@@ -2,7 +2,6 @@
 
 //loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
-//to-do: single or double quotes? Decide!
 
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 //new AudioContext object instance
@@ -14,11 +13,12 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     // gain node = volume out of 1
     gainNode = audioContext.createGain(),
-    
+
+    panNode = audioContext.createStereoPanner(),
+
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
-    //source, 
     bufferLength,
 
     stopButton = document.querySelector(".stop"),
@@ -37,7 +37,11 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filterGainSlider = document.querySelector(".filterGainSlider"),
     
     gainValue = document.querySelector(".gain"), 
-    gainSlider = document.querySelector(".gainSlider");   
+    gainSlider = document.querySelector(".gainSlider"),
+
+    panValue = document.querySelector(".pan"),
+    panSlider = document.querySelector(".panSlider");   
+
 
 // load sound
 init();
@@ -72,6 +76,10 @@ gainSlider.oninput = function () {
     changeGain(gainSlider.value);
 };
 
+panSlider.oninput = function () {
+    changePan(panSlider.value);
+};
+
 // function to load sounds via AJAX
 function loadSound(url) {
     var request = new XMLHttpRequest();
@@ -86,7 +94,6 @@ function loadSound(url) {
             playButton.innerHTML = "Play";
         });
     };
-
     request.send();
 }
 
@@ -112,7 +119,8 @@ function setupSound() {
     analyser.connect(scriptProcessorNode);
     scriptProcessorNode.connect(gainNode);
     // Connect gain node to the destination
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(panNode);
+    panNode.connect(audioContext.destination);
     
     bufferLength = analyser.frequencyBinCount;
 
@@ -137,7 +145,6 @@ function setupSound() {
             bars[i].scale.y = value;
         }
     }
-
 }
 
 //MORE UI CONTROLS (move to other section?)
@@ -150,6 +157,7 @@ function playSound() {
         UI("stop");
     }
 }
+
 // stop sound and enable / disable buttons
 function stopSound() {
     UI("stop");
@@ -160,14 +168,20 @@ function stopSound() {
 function changeRate(rate) {
     sound.playbackRate.value = rate;
     playbackRate.innerHTML = rate;
-    console.log(rate);
+    console.log("Rate: " + rate);
 }
 
-// change playback speed/rate
+// change volume
 function changeGain(gain) {
     gainNode.gain.value = gain;
     gainValue.innerHTML = gain;
-    console.log(gain);
+    console.log("Gain: " + gain);
+}
+// change pan left and right
+function changePan(pan) {
+    panNode.pan.value = pan;
+    panValue.innerHTML = pan;
+    console.log("Pan: " + pan);
 }
 
 function UI(state){
@@ -175,6 +189,7 @@ function UI(state){
         case "play":
             playButton.disabled = true;
             stopButton.disabled = false;
+            panSlider.disabled =  false;
             gainSlider.disabled = false; //volume
             playbackSlider.disabled = false;
             filterFreqSlider.disabled = false;
@@ -184,6 +199,7 @@ function UI(state){
         case "stop":
             playButton.disabled = false;
             stopButton.disabled = true;
+            panSlider.disabled = true;
             gainSlider.disabled = true;
             playbackSlider.disabled = true;
             filterFreqSlider.disabled = true;
@@ -278,33 +294,12 @@ function initialize() {
     controls = new THREE.OrbitControls( camera, container );
     controls.addEventListener( "change", render ); 
 
-    // controls.pan(new THREE.Vector3( 1, 0, 0 ));
-    // controls.pan(new THREE.Vector3( 0, 1, 0 ));
-
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
     controls.enableZoom = false;
 
     scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-
-    // geometry = new THREE.IcosahedronGeometry(2, 0, 2);
-    // material =  new THREE.MeshPhongMaterial( { color:0xd1b3e8, shading: THREE.FlatShading } );
-
-    // shape = new THREE.Mesh( geometry, material );
-    // scene.add( shape );
-
-    //re-add this for randomly located shapes later + randomly generate color
-    //Use container + function to make Object3D group, so can rotate together
-    // for ( var i = 0; i < 10; i ++ ) {
-    //     shape = new THREE.Mesh( geometry, material );
-    //     shape.position.x = ( Math.random() - 0.5 ) * 10;
-    //     shape.position.y = ( Math.random() - 0.5 ) * 10;
-    //     shape.position.z = ( Math.random() - 0.5 ) * 10;
-    //     shape.updateMatrix();
-    //     shape.matrixAutoUpdate = false;
-    //     scene.add( shape );
-    // }
 
     //loop and reate bars
     for (var i = 0; i < this.numBars; i++) {
@@ -377,13 +372,8 @@ function render() {
         }
     }
 }
-
     requestAnimationFrame( render );
     controls.update;
-    //to-do: spin the camera slowly around object, but can still use mouse input?
-    //shape.rotation.x += 0.001;
-    //shape.rotation.y += 0.001;
-    //shape.rotation.z += 0.001;
     renderer.render( scene, camera );
 }
 
