@@ -13,7 +13,9 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     // gain node = volume out of 1
     gainNode = audioContext.createGain(),
-    
+
+    panNode = audioContext.createStereoPanner(),
+
     //for analyzing audio, analyserNode method
     analyser = audioContext.createAnalyser(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
@@ -35,7 +37,11 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filterGainSlider = document.querySelector(".filterGainSlider"),
     
     gainValue = document.querySelector(".gain"), 
-    gainSlider = document.querySelector(".gainSlider");   
+    gainSlider = document.querySelector(".gainSlider"),
+
+    panValue = document.querySelector(".pan"),
+    panSlider = document.querySelector(".panSlider");   
+
 
 // load sound
 init();
@@ -70,6 +76,10 @@ gainSlider.oninput = function () {
     changeGain(gainSlider.value);
 };
 
+panSlider.oninput = function () {
+    changePan(panSlider.value);
+};
+
 // function to load sounds via AJAX
 function loadSound(url) {
     var request = new XMLHttpRequest();
@@ -84,7 +94,6 @@ function loadSound(url) {
             playButton.innerHTML = "Play";
         });
     };
-
     request.send();
 }
 
@@ -110,7 +119,8 @@ function setupSound() {
     analyser.connect(scriptProcessorNode);
     scriptProcessorNode.connect(gainNode);
     // Connect gain node to the destination
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(panNode);
+    panNode.connect(audioContext.destination);
     
     bufferLength = analyser.frequencyBinCount;
 
@@ -158,14 +168,20 @@ function stopSound() {
 function changeRate(rate) {
     sound.playbackRate.value = rate;
     playbackRate.innerHTML = rate;
-    console.log(rate);
+    console.log("Rate: " + rate);
 }
 
-// change playback speed/rate
+// change volume
 function changeGain(gain) {
     gainNode.gain.value = gain;
     gainValue.innerHTML = gain;
-    console.log(gain);
+    console.log("Gain: " + gain);
+}
+// change pan left and right
+function changePan(pan) {
+    panNode.pan.value = pan;
+    panValue.innerHTML = pan;
+    console.log("Pan: " + pan);
 }
 
 function UI(state){
@@ -173,6 +189,7 @@ function UI(state){
         case "play":
             playButton.disabled = true;
             stopButton.disabled = false;
+            panSlider.disabled =  false;
             gainSlider.disabled = false; //volume
             playbackSlider.disabled = false;
             filterFreqSlider.disabled = false;
@@ -182,6 +199,7 @@ function UI(state){
         case "stop":
             playButton.disabled = false;
             stopButton.disabled = true;
+            panSlider.disabled = true;
             gainSlider.disabled = true;
             playbackSlider.disabled = true;
             filterFreqSlider.disabled = true;
