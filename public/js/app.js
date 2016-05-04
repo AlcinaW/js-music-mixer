@@ -324,8 +324,8 @@ function initialize() {
     }
 
     //to-do: change lighting? kinda harsh atm
-    light = new THREE.DirectionalLight( 0xffffff );
-    light.position.set( 1, 1, 1 );
+    light = new THREE.DirectionalLight( 0xffffff, .8 );
+    light.position.set( 2, 1, 1 );
     scene.add( light );
 
     light = new THREE.DirectionalLight( 0x002288 );
@@ -335,8 +335,8 @@ function initialize() {
     light = new THREE.AmbientLight( 0x222222 );
     scene.add( light );
 
-    renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
-    renderer.setClearColor(0xebebeb, 1);
+    renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } ); //alpha makes bg clear so CSS shows behind
+    //renderer.setClearColor(0xebebeb, 1);
     renderer.setSize( containerWidth, containerHeight );
 
     container = document.getElementById( "threeJSContainer" );
