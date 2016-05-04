@@ -336,7 +336,7 @@ function initialize() {
     scene.add( light );
 
     renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
-    renderer.setClearColor(0xebebeb, 1);
+    //renderer.setClearColor(0xebebeb, 1);
     renderer.setSize( containerWidth, containerHeight );
 
     container = document.getElementById( "threeJSContainer" );
