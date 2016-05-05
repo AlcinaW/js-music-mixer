@@ -21,7 +21,21 @@ h2 {
 }
 button {
 	margin-bottom: 15px;
+	padding:5px;
+	width: 90px;
+	background-color: #fff;
+	border: 1.5px solid #acacac;
+	color:#000;
+	text-decoration:none;
 }
+button:disabled {
+	background-color: #959595;
+	color:#fff;
+}
+button:hover:enabled, button:focus:enabled, button:active:enabled {
+	background-color: #f5f5f5;
+}
+
 canvas {
     position: fixed;
 }
@@ -31,13 +45,17 @@ a {
 a:hover, a:focus, a:active {
 	border-bottom: 1px solid #8948a9;
 }
+#allContainer {
+	background: linear-gradient(#eee9bd, #f6d5a1);
+}
 #playContainer {
 	z-index: 1;
 	position: absolute;
 	width: 200px;
 	height:100%;
-	background-color: #fff;
 	padding-left: 15px;
+	/* background: #fff; */ 
+	background: linear-gradient(#eee9bd, #f6d5a1); 
 }
 #threeJSContainer {
 	z-index: -1;
@@ -53,8 +71,8 @@ a:hover, a:focus, a:active {
 }
 input {
 	width: 170px;
-	padding-top: 15px;
-	padding-bottom: 15px;
+	margin-top: 12px;
+	margin-bottom: 12px;
 }
 input[type=range]{
     -webkit-appearance: none;
@@ -62,7 +80,7 @@ input[type=range]{
 input[type=range]::-webkit-slider-runnable-track {
     width: 170px;
     height: 5px;
-    background: #ddd;
+    background: #9c9c9c;
     border: none;
     border-radius: 3px;
 }
@@ -72,7 +90,7 @@ input[type=range]::-webkit-slider-thumb {
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: #9986a2;
+    background: #66236d;
     margin-top: -4px;
 }
 input[type=range]:focus {
@@ -83,19 +101,4 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 input[type=range]:disable {
     background: #ccc;
-}
-button {
-  padding:5px;
-  width: 90px;
-  background-color: #fff;
-  border: 1.5px solid #acacac;
-  color:#000;
-  text-decoration:none;
-}
-button:disabled {
-  background-color: #959595;
-  color:#fff;
-}
-button:hover:enabled, button:focus:enabled, button:active:enabled {
-	background-color: #eae8eb;
 }
