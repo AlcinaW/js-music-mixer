@@ -1,15 +1,17 @@
-//Note: run with python -m SimpleHTTPServer to test, not from file, or else won"t work
+//Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
 
-//loading file with XMLHttpRequest
 //to-do: what to do about more than one piece of audio
 
 //To-DO: change to camelcase, for UI buttons maybe rewrite
+//To-DO: document.querySelector and in others document.getElementById -> chose one or other, rename classes and id properly
 //new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     filter = audioContext.createBiquadFilter(),
 
+    //music to be loaded and played
     sampleURL = "../media/Every_Step.mp3",
-    sampleBuffer, sound, playButton = document.querySelector(".play"),
+    sampleBuffer, sound, 
+    playButton = document.querySelector(".play"),
 
     // gain node = volume out of 1
     gainNode = audioContext.createGain(),
@@ -55,13 +57,13 @@ function init() {
         console.log("Gotta catch all the errors! Gotta catch 'em all, gotta catch 'em all!");
         }
             catch(error) {
-            alert("Web Audio API is not supported in this browser.");
+            alert("Web Audio API is not supported in this browser. Sadface. :(");
             console.log("Error: " + error);
         }
     loadSound(sampleURL);
 }
 
-//UI CONTROL FUNCTIONS
+//PLAY AND STOP CONTROL FUNCTIONS
 playButton.onclick = function () {
     playSound();
 };
@@ -70,6 +72,7 @@ stopButton.onclick = function () {
     stopSound();
 };
 
+//SLIDER CONTROL FUNCTIONS
 playbackSlider.oninput = function () {
     changeRate(playbackSlider.value);
 };
@@ -82,7 +85,8 @@ panSlider.oninput = function () {
     changePan(panSlider.value);
 };
 
-// function to load sounds via AJAX
+//loading file with XMLHttpRequest
+//function to load sounds via AJAX
 function loadSound(url) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -101,7 +105,7 @@ function loadSound(url) {
 
 // set our sound buffer, loop, and connect to destination
 // connect each node to each other in a chain, and then connect to audioContext.destination
-// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn"t much documentation on audio workers
+// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -182,6 +186,7 @@ function changeGain(gain) {
 // change pan left and right
 function changePan(pan) {
     panNode.pan.value = pan;
+    //changes gradient defined in CSS class to show which way the pan is going 
     if (pan == 0) {
         container.className = "panColour";
     } else if (pan > 0) {
@@ -194,7 +199,11 @@ function changePan(pan) {
     panValue.innerHTML = pan + " " + panDir;
     console.log("Pan: " + pan);
 }
-
+//switch statement to disable all sliders when the music is NOT loaded/playing
+//TO-DO: rewrite in a more DRY way 
+//Ex1. apply a class to all the objects that get enabled/disabled, then do a document.querySelectorall to get all of them,
+//then loop through to set each one to enabled/disabled. This would make it easier if you add another control. 
+//Ex2. Or put them all into a named div: http://stackoverflow.com/questions/8423812/enable-disable-a-div-and-its-elements-in-javascript
 function setPlaybackControls(state){
     switch(state){
         case "play":
