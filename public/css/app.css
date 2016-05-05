@@ -35,7 +35,6 @@ button:disabled {
 button:hover:enabled, button:focus:enabled, button:active:enabled {
 	background-color: #f5f5f5;
 }
-
 canvas {
     position: fixed;
 }
@@ -45,24 +44,29 @@ a {
 a:hover, a:focus, a:active {
 	border-bottom: 1px solid #8948a9;
 }
-#allContainer {
-	background: linear-gradient(#eee9bd, #f6d5a1);
-}
 #playContainer {
 	z-index: 1;
 	position: absolute;
 	width: 200px;
 	height:100%;
 	padding-left: 15px;
-	/* background: #fff; */ 
-	background: linear-gradient(#eee9bd, #f6d5a1); 
+	background: #fff;  
+	/* background: linear-gradient(#eee9bd, #f6d5a1); */
 }
 #threeJSContainer {
 	z-index: -1;
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(#eee9bd, #f6d5a1);
+}
+.panColour {
+	background: linear-gradient(#eee9bd, #f6d5a1);  
+}
+.panColourR {
+	background: linear-gradient( 270deg, #f6d5a1, #eee9bd);  
+}
+.panColourL {
+	background: linear-gradient( 90deg, #f6d5a1, #eee9bd);  
 }
 #description {
 	position: absolute;
@@ -80,24 +84,27 @@ input[type=range]{
 input[type=range]::-webkit-slider-runnable-track {
     width: 170px;
     height: 5px;
-    background: #9c9c9c;
+    /*background: #9c9c9c;*/
+    background: #ccc;
     border: none;
     border-radius: 3px;
 }
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    border: none;
+    border: 2px solid #acacac;
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: #66236d;
+    /*background: #66236d; */
+    background: #fff;
     margin-top: -4px;
 }
 input[type=range]:focus {
     outline: none;
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #ccc;
+    /*background: #ccc;*/
+    background: #9c9c9c;
 }
 input[type=range]:disable {
     background: #ccc;

@@ -106,9 +106,9 @@ function setupSound() {
     sound.loop = loop; //auto is false
     sound.playbackRate.value = playbackSlider.value;
 
-    analyser.smoothingTimeConstant = 0.85, //0<->1. 0 is no time smoothing
+    analyser.smoothingTimeConstant = .85, //0<->1. 0 is no time smoothing
     analyser.fftSize = 2048, 
-    analyser.minDecibels = -90,
+    analyser.minDecibels = -150,
     analyser.maxDecibels = -10,
 
     sound.connect(filter); //can connect more than one to a node?
@@ -138,7 +138,7 @@ function setupSound() {
 
         var step = Math.round(array.length / numBars);
 
-        //Iterate through bars and scale the y axis
+        //iterate through bars and scale the y axis
         for (var i = 0; i < numBars; i++) {
             var value = array[i * step] / 4;
             value = value < 1 ? 1 : value;
@@ -147,20 +147,20 @@ function setupSound() {
     }
 }
 
-//MORE UI CONTROLS (move to other section?)
+//MORE SLIDER CONTROLS (move to other section?)
 // play sound and enable / disable buttons
 function playSound() {
     setupSound();
-    UI("play");
+    setPlaybackControls("play");
     sound.start(0);
     sound.onended = function () {
-        UI("stop");
+        setPlaybackControls("stop");
     }
 }
 
 // stop sound and enable / disable buttons
 function stopSound() {
-    UI("stop");
+    setPlaybackControls("stop");
     sound.stop(0);
 }
 
@@ -180,11 +180,18 @@ function changeGain(gain) {
 // change pan left and right
 function changePan(pan) {
     panNode.pan.value = pan;
+    if (pan == 0) {
+        document.getElementById("threeJSContainer").className = "panColour";
+    } else if (pan > 0) {
+        document.getElementById("threeJSContainer").className = "panColourR";
+    } else {
+        document.getElementById("threeJSContainer").className = "panColourL";
+    }
     panValue.innerHTML = pan;
     console.log("Pan: " + pan);
 }
 
-function UI(state){
+function setPlaybackControls(state){
     switch(state){
         case "play":
             playButton.disabled = true;
@@ -274,7 +281,7 @@ function changeFilterGain(gain) {
 var scene, camera, renderer, geometry, material, controls;
 var bars = new Array();
 
-var numBars = 20;
+var numBars = 50;
 var boost = 0;
 
 var container = document.getElementById("threeJSContainer");
@@ -288,8 +295,8 @@ render();
 function initialize() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
-    camera.position.set(3,3, 2);
-    camera.position.z = 10;
+    camera.position.set(6, 2, 1);
+    camera.position.z = 25;
 
     controls = new THREE.OrbitControls( camera, container );
     controls.addEventListener( "change", render ); 
