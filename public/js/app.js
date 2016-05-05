@@ -4,31 +4,40 @@
 
 //To-DO: change to camelcase, for UI buttons maybe rewrite
 //To-DO: document.querySelector and in others document.getElementById -> chose one or other, rename classes and id properly
+
 //new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
-    filter = audioContext.createBiquadFilter(),
 
     //music to be loaded and played
     sampleURL = "../media/Every_Step.mp3",
     sampleBuffer, sound, 
-    playButton = document.querySelector(".play"),
 
-    // gain node = volume out of 1
+    //gain node = volume out of 1
     gainNode = audioContext.createGain(),
-
     panNode = audioContext.createStereoPanner(),
-
-    //for analyzing audio, analyserNode method
+    filter = audioContext.createBiquadFilter(),
     analyser = audioContext.createAnalyser(),
+
+    //for analyzing audio, scriptProcessorNode method
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     bufferLength,
 
+    playButton = document.querySelector(".play"),
     stopButton = document.querySelector(".stop"),
-    loop = true,
-    playbackSlider = document.querySelector(".playbackSlider"),
+    loop = true, //music loop
+
+    gainValue = document.querySelector(".gain"), 
+    gainSlider = document.querySelector(".gainSlider"),
+
     playbackRate = document.querySelector(".rate"),
+    playbackSlider = document.querySelector(".playbackSlider"),
+
+    panValue = document.querySelector(".pan"),
+    panSlider = document.querySelector(".panSlider"),
+    panDir, //to show left or right pan on HTML side
 
     filterType = document.querySelector(".filterType"),
+
     filterFreq = document.querySelector(".freq"),
     filterFreqSlider = document.querySelector(".filterSlider"),
 
@@ -37,56 +46,48 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     filterGain = document.querySelector(".filterGainValue"),
     filterGainSlider = document.querySelector(".filterGainSlider"),
-    
-    gainValue = document.querySelector(".gain"), 
-    gainSlider = document.querySelector(".gainSlider"),
 
-    panValue = document.querySelector(".pan"),
-    panSlider = document.querySelector(".panSlider"),
-    panDir,
     container = document.getElementById("threeJSContainer");   
-
 
 // load sound
 init();
 
 function init() {
-        //test if browser supports web audio api
-        try {
+    //test if browser supports web audio API
+    try {
         window.AudioContext = window.AudioContext||window.webkitAudioContext;
-        console.log("Gotta catch all the errors! Gotta catch 'em all, gotta catch 'em all!");
+        console.log("Web audio API supported! Alphanumeric!");
         }
-            catch(error) {
-            alert("Web Audio API is not supported in this browser. Sadface. :(");
-            console.log("Error: " + error);
+    catch(error) {
+        alert("Web audio API is not supported in this browser. Sadface. :(");
+        console.log("Error: " + error);
         }
     loadSound(sampleURL);
 }
 
 //PLAY AND STOP CONTROL FUNCTIONS
-playButton.onclick = function () {
+playButton.onclick = function() {
     playSound();
-};
+}
 
-stopButton.onclick = function () {
+stopButton.onclick = function() {
     stopSound();
-};
+}
 
 //SLIDER CONTROL FUNCTIONS
-playbackSlider.oninput = function () {
+playbackSlider.oninput = function() {
     changeRate(playbackSlider.value);
-};
+}
 
-gainSlider.oninput = function () {
+gainSlider.oninput = function() {
     changeGain(gainSlider.value);
-};
+}
 
-panSlider.oninput = function () {
+panSlider.oninput = function() {
     changePan(panSlider.value);
-};
+}
 
-//loading file with XMLHttpRequest
-//function to load sounds via AJAX
+//function to load sounds via AJAX to create an XMLHttpRequest object
 function loadSound(url) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -103,9 +104,9 @@ function loadSound(url) {
     request.send();
 }
 
-// set our sound buffer, loop, and connect to destination
-// connect each node to each other in a chain, and then connect to audioContext.destination
-// javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
+//set our sound buffer, loop, and connect to destination
+//connect each node to each other in a chain, and then connect to audioContext.destination
+//javascriptNode is decrepreciated, as is scriptProcessorNode, but there isn't much documentation on audio workers
 function setupSound() {
     sound = audioContext.createBufferSource();
     sound.buffer = sampleBuffer;
@@ -113,22 +114,23 @@ function setupSound() {
     sound.playbackRate.value = playbackSlider.value;
 
     analyser.smoothingTimeConstant = .85, //0<->1. 0 is no time smoothing
-    analyser.fftSize = 2048, 
+    analyser.fftSize = 2048, //must be some number by the power of 2, ex. 512
     analyser.minDecibels = -150,
     analyser.maxDecibels = -10,
 
-    sound.connect(filter); //can connect more than one to a node?
+    sound.connect(filter); //can connect more than one to a node, as long as it all ends up at destination
     
-    // Connect source/sound var to the gain node
+    //connect source/sound var to the gain node
     filter.connect(gainNode);
     filter.connect(analyser);
     analyser.connect(scriptProcessorNode);
     scriptProcessorNode.connect(gainNode);
-    // Connect gain node to the destination
     gainNode.connect(panNode);
+    //connect pan node to the destination (a.k.a. the speakers)
     panNode.connect(audioContext.destination);
     
-    bufferLength = analyser.frequencyBinCount;
+    //frequencyBinCount property of the analyserNode interface is an unsigned long value half that of the fft size -MDN
+    bufferLength = analyser.frequencyBinCount; 
 
     //animate the bars
     scriptProcessorNode.onaudioprocess = function (audioProcessingEvent) {
