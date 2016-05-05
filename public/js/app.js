@@ -40,7 +40,9 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     gainSlider = document.querySelector(".gainSlider"),
 
     panValue = document.querySelector(".pan"),
-    panSlider = document.querySelector(".panSlider");   
+    panSlider = document.querySelector(".panSlider"),
+    panDir,
+    container = document.getElementById("threeJSContainer");   
 
 
 // load sound
@@ -138,11 +140,11 @@ function setupSound() {
 
         var step = Math.round(array.length / numBars);
 
-        //iterate through bars and scale the y axis
+        //iterate through bars and scale the z axis
         for (var i = 0; i < numBars; i++) {
             var value = array[i * step] / 4;
             value = value < 1 ? 1 : value;
-            bars[i].scale.y = value;
+            bars[i].scale.z = value;
         }
     }
 }
@@ -181,13 +183,15 @@ function changeGain(gain) {
 function changePan(pan) {
     panNode.pan.value = pan;
     if (pan == 0) {
-        document.getElementById("threeJSContainer").className = "panColour";
+        container.className = "panColour";
     } else if (pan > 0) {
-        document.getElementById("threeJSContainer").className = "panColourR";
+        container.className = "panColourR";
+        panDir = "Right";
     } else {
-        document.getElementById("threeJSContainer").className = "panColourL";
+        container.className = "panColourL";
+        panDir = "Left"
     }
-    panValue.innerHTML = pan;
+    panValue.innerHTML = pan + " " + panDir;
     console.log("Pan: " + pan);
 }
 
@@ -281,10 +285,8 @@ function changeFilterGain(gain) {
 var scene, camera, renderer, geometry, material, controls;
 var bars = new Array();
 
-var numBars = 50;
+var numBars = 50; //number of bars, if change, need to adjust camera as well
 var boost = 0;
-
-var container = document.getElementById("threeJSContainer");
 
 var containerWidth = document.getElementById("threeJSContainer").offsetWidth;
 var containerHeight = document.getElementById("threeJSContainer").offsetHeight;
@@ -295,20 +297,20 @@ render();
 function initialize() {
 
     camera = new THREE.PerspectiveCamera( 75, containerWidth / containerHeight, 1, 1000 );
-    camera.position.set(6, 2, 1);
-    camera.position.z = 25;
+    camera.position.set(5, 20, 10);
+    camera.position.z = 9; //set "distance" of camera
 
     controls = new THREE.OrbitControls( camera, container );
-    controls.addEventListener( "change", render ); 
+    controls.addEventListener( "change", render ); //listens for mouse input to move camera
 
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
-    controls.enableZoom = false;
+    controls.enableZoom = false; //can't zoom into the scene, default is true
 
     scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+    //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 ); //aerial perspective, fog to create illusion of distance
 
-    //loop and reate bars
+    //loop and create the number of numbars (harhar)
     for (var i = 0; i < this.numBars; i++) {
 
         //create a bar
@@ -317,7 +319,7 @@ function initialize() {
         //create a material
         var material = new THREE.MeshPhongMaterial({
             //color:0xd1b3e8, 
-            color: randomColor(),
+            color: randomColour(), //random coloured bars
             shading: THREE.FlatShading,
             reflectivity: 5.5 
         });
@@ -384,7 +386,7 @@ function render() {
     renderer.render( scene, camera );
 }
 
-function randomColor() {
+function randomColour() {
     var min = 64;
     var max = 224;
     var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;

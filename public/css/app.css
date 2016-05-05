@@ -74,7 +74,7 @@ a:hover, a:focus, a:active {
 	bottom: 0;
 }
 input {
-	width: 170px;
+	width: 185px;
 	margin-top: 12px;
 	margin-bottom: 12px;
 }
@@ -108,4 +108,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 input[type=range]:disable {
     background: #ccc;
+}
+ul {
+	list-style-type: none;
+	margin-left: -35px;
 }
