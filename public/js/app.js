@@ -199,7 +199,7 @@ function changePan(pan) {
         panDir = "Left"
     }
     panValue.innerHTML = pan + " " + panDir;
-    console.log("Pan: " + pan);
+    console.log("Pan: " + pan + " " + panDir);
 }
 //switch statement to disable all sliders when the music is NOT loaded/playing
 //TO-DO: rewrite in a more DRY way 
@@ -355,11 +355,12 @@ function initialize() {
     light = new THREE.AmbientLight( 0x222222 );
     scene.add( light );
 
-    renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } ); //alpha makes bg clear so CSS shows behind
+    //alpha makes background transparent so CSS shows behind; anti-alias for smooth animation of bars
+    renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } ); 
     //renderer.setClearColor(0xebebeb, 1);
     renderer.setSize( containerWidth, containerHeight );
 
-    container = document.getElementById( "threeJSContainer" );
+    container = document.getElementById( "threeJSContainer" ); //do I need this?
     container.appendChild( renderer.domElement );
 
     window.addEventListener( "resize", onWindowResize, false );

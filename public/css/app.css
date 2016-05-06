@@ -14,6 +14,7 @@ h1 {
 	font-size: 25px;
 	font-weight: bold;
 	text-transform: uppercase;
+	margin-bottom: -10px;
 }
 h2 {
 	font-size: 18px;
@@ -53,6 +54,11 @@ a:hover, a:focus, a:active {
 	background: #fff;  
 	/* background: linear-gradient(#eee9bd, #f6d5a1); */
 }
+p {
+	padding-right: 15px;
+	font-size: 9pt;
+	line-height: 11pt;
+}
 #threeJSContainer {
 	z-index: -1;
 	position: absolute;
@@ -75,8 +81,8 @@ a:hover, a:focus, a:active {
 }
 input {
 	width: 185px;
-	margin-top: 12px;
-	margin-bottom: 12px;
+	margin-top: 8px;
+	margin-bottom: 8px;
 }
 input[type=range]{
     -webkit-appearance: none;
@@ -108,8 +114,4 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 input[type=range]:disable {
     background: #ccc;
-}
-ul {
-	list-style-type: none;
-	margin-left: -35px;
 }
