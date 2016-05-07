@@ -22,30 +22,30 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     bufferLength,
 
-    playButton = document.querySelector(".play"),
-    stopButton = document.querySelector(".stop"),
+    playButton = document.getElementById("play"),
+    stopButton = document.getElementById("stop"),
     loop = true, //music loop
 
-    gainValue = document.querySelector(".gain"), 
-    gainSlider = document.querySelector(".gainSlider"),
+    gainValue = document.getElementById("gain"), 
+    gainSlider = document.getElementById("gainSlider"),
 
-    playbackRate = document.querySelector(".rate"),
-    playbackSlider = document.querySelector(".playbackSlider"),
+    playbackRate = document.getElementById("rate"),
+    playbackSlider = document.getElementById("playbackSlider"),
 
-    panValue = document.querySelector(".pan"),
-    panSlider = document.querySelector(".panSlider"),
+    panValue = document.getElementById("pan"),
+    panSlider = document.getElementById("panSlider"),
     panDir, //to show left or right pan on HTML side
 
-    filterType = document.querySelector(".filterType"),
+    filterType = document.getElementsByClassName("filterType"),
 
-    filterFreq = document.querySelector(".freq"),
-    filterFreqSlider = document.querySelector(".filterSlider"),
+    filterFreq = document.getElementById("freq"),
+    filterFreqSlider = document.getElementById("filterSlider"),
 
-    filterQ = document.querySelector(".filterQValue"),
-    filterQSlider = document.querySelector(".filterQSlider"),
+    filterQ = document.getElementById("filterQValue"),
+    filterQSlider = document.getElementById("filterQSlider"),
 
-    filterGain = document.querySelector(".filterGainValue"),
-    filterGainSlider = document.querySelector(".filterGainSlider"),
+    filterGain = document.getElementById("filterGainValue"),
+    filterGainSlider = document.getElementById("filterGainSlider"),
 
     container = document.getElementById("threeJSContainer");   
 
