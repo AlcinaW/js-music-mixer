@@ -1,15 +1,14 @@
 //Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
 
-//to-do: what to do about more than one piece of audio
-
-//To-DO: change to camelcase, for UI buttons maybe rewrite
-//To-DO: document.querySelector and in others document.getElementById -> chose one or other, rename classes and id properly
-
 //new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     //music to be loaded and played
+    //Source: Youtube Audio Library https://www.youtube.com/audiolibrary/music
+    //The Voyage by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/by/4.0/)
+    //Artist: http://audionautix.com/
     sampleURL = "../media/Every_Step.mp3",
+    //sampleURL = "../media/The_Voyage.mp3", 
     sampleBuffer, sound, 
 
     //gain node = volume out of 1
@@ -137,7 +136,6 @@ function setupSound() {
 
     //animate the bars
     scriptProcessorNode.onaudioprocess = function (audioProcessingEvent) {
-
         array = new Uint8Array(bufferLength);
         analyser.getByteFrequencyData(array);
 
@@ -335,7 +333,6 @@ function initialize() {
         scene.add(bars[i]);
     }
 
-    //to-do: change lighting? kinda harsh atm
     light = new THREE.DirectionalLight( 0xffffff, .8 );
     light.position.set( 2, 1, 1 );
     scene.add( light );
@@ -374,7 +371,6 @@ function onWindowResize() {
 
 function render() {
 
-    //to-do: double-check this part, maybe rewrite
     if(typeof array === "object" && array.length > 0) {
     var k = 0;
     for(var i = 0; i < bars.length; i++) {
