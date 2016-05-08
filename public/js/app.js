@@ -38,6 +38,9 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     filterType = document.querySelector("select"),
 
+    //nodelist to array on order to disable or enable all inputs
+    inputArray = [].slice.call(document.querySelectorAll("input")), 
+
     filterFreq = document.getElementById("freq"),
     filterFreqSlider = document.getElementById("filterSlider"),
 
@@ -201,33 +204,22 @@ function changePan(pan) {
     panValue.innerHTML = pan + " " + panDir;
     console.log("Pan: " + pan + " " + panDir);
 }
-//switch statement to disable all sliders when the music is NOT loaded/playing
-//TO-DO: rewrite in a more DRY way 
-//Ex1. apply a class to all the objects that get enabled/disabled, then do a document.querySelectorall to get all of them,
-//then loop through to set each one to enabled/disabled. This would make it easier if you add another control. 
-//Ex2. Or put them all into a named div: http://stackoverflow.com/questions/8423812/enable-disable-a-div-and-its-elements-in-javascript
+
+//set button states and disable inputs when the music is not playing
 function setPlaybackControls(state){
-    switch(state){
-        case "play":
-            playButton.disabled = true;
-            stopButton.disabled = false;
-            panSlider.disabled =  false;
-            gainSlider.disabled = false; //volume
-            playbackSlider.disabled = false;
-            filterFreqSlider.disabled = false;
-            filterQSlider.disabled = false;
-            filterGainSlider.disabled = false; 
-            break;
-        case "stop":
-            playButton.disabled = false;
-            stopButton.disabled = true;
-            panSlider.disabled = true;
-            gainSlider.disabled = true;
-            playbackSlider.disabled = true;
-            filterFreqSlider.disabled = true;
-            filterQSlider.disabled = true;
-            filterGainSlider.disabled = true;
-            break;
+    if (state === "play") {
+        for (i= 0; i < inputArray.length; i++) {
+            inputArray[i].disabled = false;
+        }
+        playButton.disabled = true;
+        stopButton.disabled = false;
+    } 
+    if (state === "stop") {
+        for (i= 0; i < inputArray.length; i++) {
+            inputArray[i].disabled = true;
+        }
+        playButton.disabled = false;
+        stopButton.disabled = true;
     }
 }
 
