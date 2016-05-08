@@ -36,7 +36,7 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     panSlider = document.getElementById("panSlider"),
     panDir, //to show left or right pan on HTML side
 
-    filterType = document.getElementsByClassName("filterType"),
+    filterType = document.querySelector("select"),
 
     filterFreq = document.getElementById("freq"),
     filterFreqSlider = document.getElementById("filterSlider"),
@@ -232,7 +232,7 @@ function setPlaybackControls(state){
 }
 
 //ADD FILTERS
-filterType.oninput = function () {
+filterType.onchange = function () {
     changeFilterType(filterType.value);
 };
 
