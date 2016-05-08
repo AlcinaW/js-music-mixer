@@ -156,7 +156,7 @@ function setupSound() {
     }
 }
 
-//MORE SLIDER CONTROLS (move to other section?)
+//MORE SLIDER CONTROLS 
 // play sound and enable / disable buttons
 function playSound() {
     setupSound();
@@ -309,7 +309,6 @@ function initialize() {
     controls.enableZoom = false; //can't zoom into the scene, default is true
 
     scene = new THREE.Scene();
-    //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 ); //aerial perspective, fog to create illusion of distance
 
     //loop and create the number of numbars (harhar)
     for (var i = 0; i < this.numBars; i++) {
@@ -320,7 +319,7 @@ function initialize() {
         //create a material
         var material = new THREE.MeshPhongMaterial({
             //color:0xd1b3e8, 
-            color: randomColour(), //random coloured bars
+            color: randomColour(), //randomly coloured bars
             shading: THREE.FlatShading,
             reflectivity: 5.5 
         });
@@ -356,6 +355,15 @@ function initialize() {
 
 }
 
+function randomColour() {
+    var min = 64;
+    var max = 224;
+    var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;
+    var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
+    var b = (Math.floor(Math.random() * (max - min + 1)) + min);
+    return r + g + b;
+}
+
 function onWindowResize() {
 
     containerWidth = document.getElementById("threeJSContainer").offsetWidth;
@@ -384,13 +392,4 @@ function render() {
     requestAnimationFrame( render );
     controls.update;
     renderer.render( scene, camera );
-}
-
-function randomColour() {
-    var min = 64;
-    var max = 224;
-    var r = (Math.floor(Math.random() * (max - min + 1)) + min) * 65536;
-    var g = (Math.floor(Math.random() * (max - min + 1)) + min) * 256;
-    var b = (Math.floor(Math.random() * (max - min + 1)) + min);
-    return r + g + b;
 }
