@@ -12,39 +12,40 @@
 			<h2>JavaScript Music Mixer Project</h2>
 			<p>Try out the different filters to see and hear the effect! By default, the audio analyzer is set to the minimum level -150 decibels, and maximum of -10.</p>
 			<p>Headphones are recommended.</p>
-		    <button class="play" disabled>Loading...</button>
-		    <button class="stop" disabled>Stop</button>
+			<p> The Voyage by <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Audionautix</a> is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution</a> license.</p>
+		    <button id="play" disabled>Loading...</button>
+		    <button id="stop" disabled>Stop</button>
 		</div>
 		<div class="audioControls">
-			    <label for="gainValue">Volume: <span class="gain">1</span>
-					<input class="gainSlider" name="gainValue" type="range" min="0" max="1" step=".01" value="1" disabled />
+			    <label for="gainValue">Volume: <span id="gain">1</span>
+					<input id="gainSlider" name="gainValue" type="range" min="0" max="1" step=".01" value="1" disabled />
 				</label>
 			<br>
-			    <label for="playbackRate">Playback rate: <span class="rate">1</span>
+			    <label for="playbackRate">Playback rate: <span id="rate">1</span>
 			    	<!-- some browers don't allow playback rate under .4 or under -->
-			        <input class="playbackSlider" name="playbackRate" type="range" min=".1" max="10" step="0.05" value="1" disabled />
+			        <input id="playbackSlider" name="playbackRate" type="range" min=".1" max="10" step="0.05" value="1" disabled />
 			    </label>
 			<br>
-			    <label for="panValue">Stereo panning: <span class="pan">0</span>
-			        <input class="panSlider" name="panValue" type="range" min="-1" max="1" step="0.01" value="0" disabled />
+			    <label for="panValue">Stereo panning: <span id="pan">0</span>
+			        <input id="panSlider" name="panValue" type="range" min="-1" max="1" step="0.01" value="0" disabled />
 			    </label>
 			<br>
 
 			<div class="filterControls">
-			    <label for="filterFreq">Filter frequency: <span class="freq">2500Hz</span>
-			        <input class="filterSlider" name="filterFreq" type="range" min="0" max="20000" step="10" value="2500" disabled />
+			    <label for="filterFreq">Filter frequency: <span id="freq">2500Hz</span>
+			        <input id="filterSlider" name="filterFreq" type="range" min="0" max="20000" step="10" value="2500" disabled />
 			    </label>
 
 			<br>
 
-			    <label>Filter quality value: <span class="filterQValue">1</span> 
-			        <input class="filterQSlider" type="range" min=".0001" max="10" step=".0001" value="5" disabled/>
+			    <label>Filter quality value: <span id="filterQValue">1</span> 
+			        <input id="filterQSlider" type="range" min=".0001" max="10" step=".0001" value="5" disabled/>
 			    </label>
 
 			<br>
 
-			    <label>Filter gain value: <span class="filterGainValue">0</span> 
-			        <input class="filterGainSlider" type="range" min="-40" max="40" step="1" value="0" disabled/>
+			    <label>Filter gain value: <span id="filterGainValue">0</span> 
+			        <input id="filterGainSlider" type="range" min="-40" max="40" step="1" value="0" disabled/>
 			    </label>
 
 			<br>

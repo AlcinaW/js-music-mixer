@@ -1,15 +1,14 @@
 //Note: run with python -m SimpleHTTPServer to test, not from file, or else won't work
 
-//to-do: what to do about more than one piece of audio
-
-//To-DO: change to camelcase, for UI buttons maybe rewrite
-//To-DO: document.querySelector and in others document.getElementById -> chose one or other, rename classes and id properly
-
 //new AudioContext object instance
 var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
 
     //music to be loaded and played
+    //Source: Youtube Audio Library https://www.youtube.com/audiolibrary/music
+    //The Voyage by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/by/4.0/)
+    //Artist: http://audionautix.com/
     sampleURL = "../media/Every_Step.mp3",
+    //sampleURL = "../media/The_Voyage.mp3", 
     sampleBuffer, sound, 
 
     //gain node = volume out of 1
@@ -22,30 +21,33 @@ var audioContext = new(window.AudioContext || window.webkitAudioContext)(),
     scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1), 
     bufferLength,
 
-    playButton = document.querySelector(".play"),
-    stopButton = document.querySelector(".stop"),
+    playButton = document.getElementById("play"),
+    stopButton = document.getElementById("stop"),
     loop = true, //music loop
 
-    gainValue = document.querySelector(".gain"), 
-    gainSlider = document.querySelector(".gainSlider"),
+    gainValue = document.getElementById("gain"), 
+    gainSlider = document.getElementById("gainSlider"),
 
-    playbackRate = document.querySelector(".rate"),
-    playbackSlider = document.querySelector(".playbackSlider"),
+    playbackRate = document.getElementById("rate"),
+    playbackSlider = document.getElementById("playbackSlider"),
 
-    panValue = document.querySelector(".pan"),
-    panSlider = document.querySelector(".panSlider"),
+    panValue = document.getElementById("pan"),
+    panSlider = document.getElementById("panSlider"),
     panDir, //to show left or right pan on HTML side
 
-    filterType = document.querySelector(".filterType"),
+    filterType = document.querySelector("select"),
 
-    filterFreq = document.querySelector(".freq"),
-    filterFreqSlider = document.querySelector(".filterSlider"),
+    //nodelist to array on order to disable or enable all inputs
+    inputArray = [].slice.call(document.querySelectorAll("input")), 
 
-    filterQ = document.querySelector(".filterQValue"),
-    filterQSlider = document.querySelector(".filterQSlider"),
+    filterFreq = document.getElementById("freq"),
+    filterFreqSlider = document.getElementById("filterSlider"),
 
-    filterGain = document.querySelector(".filterGainValue"),
-    filterGainSlider = document.querySelector(".filterGainSlider"),
+    filterQ = document.getElementById("filterQValue"),
+    filterQSlider = document.getElementById("filterQSlider"),
+
+    filterGain = document.getElementById("filterGainValue"),
+    filterGainSlider = document.getElementById("filterGainSlider"),
 
     container = document.getElementById("threeJSContainer");   
 
@@ -134,7 +136,6 @@ function setupSound() {
 
     //animate the bars
     scriptProcessorNode.onaudioprocess = function (audioProcessingEvent) {
-
         array = new Uint8Array(bufferLength);
         analyser.getByteFrequencyData(array);
 
@@ -201,38 +202,27 @@ function changePan(pan) {
     panValue.innerHTML = pan + " " + panDir;
     console.log("Pan: " + pan + " " + panDir);
 }
-//switch statement to disable all sliders when the music is NOT loaded/playing
-//TO-DO: rewrite in a more DRY way 
-//Ex1. apply a class to all the objects that get enabled/disabled, then do a document.querySelectorall to get all of them,
-//then loop through to set each one to enabled/disabled. This would make it easier if you add another control. 
-//Ex2. Or put them all into a named div: http://stackoverflow.com/questions/8423812/enable-disable-a-div-and-its-elements-in-javascript
+
+//set button states and disable inputs when the music is not playing
 function setPlaybackControls(state){
-    switch(state){
-        case "play":
-            playButton.disabled = true;
-            stopButton.disabled = false;
-            panSlider.disabled =  false;
-            gainSlider.disabled = false; //volume
-            playbackSlider.disabled = false;
-            filterFreqSlider.disabled = false;
-            filterQSlider.disabled = false;
-            filterGainSlider.disabled = false; 
-            break;
-        case "stop":
-            playButton.disabled = false;
-            stopButton.disabled = true;
-            panSlider.disabled = true;
-            gainSlider.disabled = true;
-            playbackSlider.disabled = true;
-            filterFreqSlider.disabled = true;
-            filterQSlider.disabled = true;
-            filterGainSlider.disabled = true;
-            break;
+    if (state === "play") {
+        for (i= 0; i < inputArray.length; i++) {
+            inputArray[i].disabled = false;
+        }
+        playButton.disabled = true;
+        stopButton.disabled = false;
+    } 
+    if (state === "stop") {
+        for (i= 0; i < inputArray.length; i++) {
+            inputArray[i].disabled = true;
+        }
+        playButton.disabled = false;
+        stopButton.disabled = true;
     }
 }
 
 //ADD FILTERS
-filterType.oninput = function () {
+filterType.onchange = function () {
     changeFilterType(filterType.value);
 };
 
@@ -343,7 +333,6 @@ function initialize() {
         scene.add(bars[i]);
     }
 
-    //to-do: change lighting? kinda harsh atm
     light = new THREE.DirectionalLight( 0xffffff, .8 );
     light.position.set( 2, 1, 1 );
     scene.add( light );
@@ -382,7 +371,6 @@ function onWindowResize() {
 
 function render() {
 
-    //to-do: double-check this part, maybe rewrite
     if(typeof array === "object" && array.length > 0) {
     var k = 0;
     for(var i = 0; i < bars.length; i++) {
