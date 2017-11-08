@@ -4,4 +4,4 @@ A music player that works in-browser with a predetermined track. When buttons or
 
 [Demo](https://amusejsmixer.appspot.com/)  
 
-A [Learn IT, Girl](https://www.learnitgirl.com) 2016 project. 
+A [Learn IT, Girl](https://www.learnitgirl.com/second_edition) 2016 featured project. 
